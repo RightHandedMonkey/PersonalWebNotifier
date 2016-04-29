@@ -10,7 +10,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.rhm.personalwebnotifier"
+        applicationId "com.rhm.pwn"
         minSdkVersion 10
         targetSdkVersion 23
         versionCode 1
@@ -22,6 +22,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    signingConfigs {
+        release {
+            //Need to add these entries to the system environment variables and reload the variables
+            storeFile file(System.getenv("APK_KEYSTORE_FILE"))
+            keyAlias System.getenv("APK_KEY_ALIAS")
+            storePassword System.getenv("APK_STORE_PW")
+            keyPassword System.getenv("APK_KEY_PW")
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+
+
 }
 
 dependencies {
