@@ -1,4 +1,4 @@
-package com.rhm.pwn;
+package com.rhm.pwn.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 
+import com.rhm.pwn.R;
 import com.rhm.pwn.fragments.URLDisplayFragment;
 import com.rhm.pwn.fragments.URLListFragment;
 import com.rhm.pwn.fragments.URLNewItemDialog;

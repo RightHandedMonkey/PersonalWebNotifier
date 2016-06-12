@@ -1,10 +1,11 @@
-package com.rhm.pwn;
+package com.rhm.pwn.application;
 
 import android.util.Log;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Delete;
 import com.rhm.pwn.models.URLItem;
+import com.urbanairship.UAirship;
 
 /**
  * Created by sambo on 4/25/2016.
@@ -16,6 +17,14 @@ public class URLMainApp extends com.activeandroid.app.Application {
         ActiveAndroid.initialize(this);
         Log.d(this.getClass().getName(), "App onCreate called");
         createSamples();
+
+        UAirship.takeOff(this, new UAirship.OnReadyCallback() {
+            @Override
+            public void onAirshipReady(UAirship airship) {
+                // Enable user notifications
+                airship.getPushManager().setUserNotificationsEnabled(true);
+            }
+        });
     }
 
     public void createSamples() {

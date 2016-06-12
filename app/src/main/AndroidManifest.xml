@@ -5,7 +5,7 @@
 
 
     <application
-        android:name="com.rhm.pwn.URLMainApp"
+        android:name=".application.URLMainApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -19,7 +19,7 @@
         <meta-data android:name="AA_DB_VERSION" android:value="1" />
 
         <activity
-            android:name="com.rhm.pwn.URLMainActivity"
+            android:name=".activities.URLMainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
@@ -27,6 +27,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Urban Airship configuration -->
+        <receiver android:name=".receivers.SampleUAReceiver"
+            android:exported="false">
+
+            <intent-filter>
+                <action android:name="com.urbanairship.push.CHANNEL_UPDATED" />
+                <action android:name="com.urbanairship.push.OPENED" />
+                <action android:name="com.urbanairship.push.RECEIVED" />
+                <action android:name="com.urbanairship.push.DISMISSED" />
+
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
