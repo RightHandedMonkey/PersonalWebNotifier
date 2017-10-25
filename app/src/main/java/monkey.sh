@@ -1,0 +1,1 @@
+adb shell monkey -p rhm.com.pwn -v 20000
