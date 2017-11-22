@@ -88,7 +88,7 @@ public class URLCheckJobScheduler extends JobService {
         long deadline = Math.max(15000, maxStart * multiplier);
         builder.setMinimumLatency(minLatency); // wait - at least 1 second
         builder.setOverrideDeadline(deadline); // maximum delay - at least 15 sec
-        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
+        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_NONE);
         builder.setRequiresCharging(false); // we don't care if the device is charging or no
         builder.setRequiresDeviceIdle(false);
 
