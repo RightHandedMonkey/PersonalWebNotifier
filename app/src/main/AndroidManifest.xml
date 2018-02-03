@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="rhm.com.pwn">
+    package="com.rhm.pwn">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:name=".PWNApp"
+        android:name="rhm.com.rhm.pwn.PWNApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".home.PWNHomeActivity"
+            android:name="rhm.com.rhm.pwn.home.PWNHomeActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
@@ -25,25 +25,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view_url.WebViewActivity"
+            android:name="rhm.com.rhm.pwn.view_url.WebViewActivity"
             android:label="@string/title_activity_web_view"
-            android:parentActivityName=".home.PWNHomeActivity"
+            android:parentActivityName="rhm.com.rhm.pwn.home.PWNHomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="rhm.com.pwn.home.PWNHomeActivity" />
+                android:value="rhm.com.rhm.pwn.home.PWNHomeActivity" />
         </activity>
 
         <service
-            android:name=".home.URLCheckJobScheduler"
+            android:name="rhm.com.rhm.pwn.home.URLCheckJobScheduler"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
-            android:name=".home.URLCheckService"
+            android:name="rhm.com.rhm.pwn.home.URLCheckService"
             android:enabled="true"
             android:exported="false" />
 
-        <receiver android:name=".home.BootCompleteReceiver">
+        <receiver android:name="rhm.com.rhm.pwn.home.BootCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
 
@@ -52,7 +52,7 @@
         </receiver>
 
         <activity
-            android:name=".debug.DebugActivity"
+            android:name="rhm.com.rhm.pwn.debug.DebugActivity"
             android:label="@string/title_activity_debug"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

@@ -93,5 +93,5 @@
     </string>
     <string name="title_activity_web_view">WebViewActivity</string>
     <string name="debug_action">Debug</string>
-    <string name="title_activity_debug">DebugActivity</string>
+    <string name="title_activity_debug">Debug Activity</string>
 </resources>

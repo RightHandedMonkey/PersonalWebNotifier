@@ -1,1 +1,1 @@
-adb shell monkey -p rhm.com.pwn -v 20000
+adb shell monkey -p com.rhm.pwn -v 20000

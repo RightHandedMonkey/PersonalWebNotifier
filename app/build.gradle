@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
     defaultConfig {
-        applicationId "rhm.com.pwn"
+        applicationId "com.rhm.pwn"
         minSdkVersion 23
         targetSdkVersion 26
         versionCode 1
@@ -33,39 +33,32 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.support:design:26.0.1'
     implementation 'com.google.firebase:firebase-messaging:11.2.0'
-    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.0'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.0'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     // Because RxAndroid releases are few and far between, it is recommended you also
     // explicitly depend on RxJava's latest version for bug fixes and new features.
     compile 'io.reactivex.rxjava2:rxjava:2.1.3'
-
     //Room
-    compile "android.arch.persistence.room:runtime:1.0.0-alpha9"
+    compile 'android.arch.persistence.room:runtime:1.0.0-alpha9'
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0-alpha9"
     //Room RxJava support
-    compile "android.arch.persistence.room:rxjava2:1.0.0-alpha9"
-
+    compile 'android.arch.persistence.room:rxjava2:1.0.0-alpha9'
     //Recycler view
     compile 'com.android.support:recyclerview-v7:26.0.1'
     //Card view
     compile 'com.android.support:cardview-v7:26.0.1'
-
     //Stream support
     compile 'net.sourceforge.streamsupport:streamsupport:1.5.6'
     compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.5.6'
     compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.5.6'
     compile 'net.sourceforge.streamsupport:streamsupport-flow:1.5.6'
     compile 'net.sourceforge.streamsupport:streamsupport-literal:1.5.6'
-
     //Jsoup DOM parser
     compile 'org.jsoup:jsoup:1.10.3'
-
     //retrofit
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
     compile 'com.squareup.retrofit2:converter-scalars:2.3.0'
-
-
 }
