@@ -32,7 +32,7 @@ public class URLCheckService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         boolean restart;
-        if (intent != null) {
+        if (intent != null && intent.getExtras() != null) {
             restart = intent.getExtras().getBoolean(this.getClass().getName(), false);
         } else {
             restart = false;
