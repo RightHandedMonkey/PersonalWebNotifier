@@ -72,6 +72,8 @@ public class URLCheckDialog extends DialogFragment {
                             urlc.setCssSelectorToInspect(css);
                             urlc.setCheckInterval(interval);
                             urlc.setEnableNotifications(enableCheckbox.isChecked());
+                            //reset last runtime for the edited object because it may have a different configuration
+                            urlc.setLastElapsedRealtime(0);
                             PWNDatabase.getInstance(getActivity().getApplicationContext()).urlCheckDao().insertAll(urlc);
                             URLCheckChangeNotifier.getNotifier().update(reloadService);
                         })      .subscribeOn(Schedulers.io())

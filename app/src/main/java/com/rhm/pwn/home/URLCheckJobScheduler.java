@@ -43,9 +43,14 @@ public class URLCheckJobScheduler extends JobService {
             int taskid = (int) jobParameters.getExtras().getLong(PWNTask.class.getName(), -1);
             if (taskid > 0) {
                 PWNTask task = PWNDatabase.getInstance(getApplicationContext()).urlCheckDao().getTask(taskid);
-                task.setActualExecutionTime(PWNUtils.getCurrentSystemDate());
-                Log.d("SAMB", this.getClass().getName() + " Job #"+taskid+" actual execution date: "+PWNUtils.getCurrentSystemDate());
-                PWNDatabase.getInstance(getApplicationContext()).urlCheckDao().updateTask(task);
+                //Note: It's possible the task was in memory but removed from the database. Skip if not found
+                if (task != null) {
+                    task.setActualExecutionTime(PWNUtils.getCurrentSystemDate());
+                    Log.d("SAMB", this.getClass().getName() + " Job #" + taskid + " actual execution date: " + PWNUtils.getCurrentSystemDate());
+                    PWNDatabase.getInstance(getApplicationContext()).urlCheckDao().updateTask(task);
+                } else {
+                    Log.e("SAMB", this.getClass().getName() + "Task was not found in database, so execution time could not be udpdated");
+                }
             }
             if (urlChecks.size() < 1) {
                 keepProcessing = false;
