@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.Observer;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
 import com.rhm.pwn.R;
 import com.rhm.pwn.model.PWNDatabase;
 import com.rhm.pwn.model.URLCheck;
@@ -34,6 +36,7 @@ import com.rhm.pwn.view_url.WebViewActivity;
 public class PWNHomeActivityFragment extends Fragment implements Observer {
 
     RecyclerView recyclerView;
+    TextView emptyView;
     URLCheckAdapter mAdapter;
     List<URLCheck> list;
 
@@ -78,9 +81,10 @@ public class PWNHomeActivityFragment extends Fragment implements Observer {
         Log.d("SAMB", this.getClass().getName() + ", onViewCreated() called");
 
         URLCheckChangeNotifier.getNotifier().addObserver(this);
-        recyclerView = (RecyclerView) view.findViewById(R.id.urlc_recycler_view);
+        recyclerView = view.findViewById(R.id.urlc_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);
+        emptyView = view.findViewById(R.id.empty_view);
         updateFromDb();
     }
 
@@ -118,6 +122,13 @@ public class PWNHomeActivityFragment extends Fragment implements Observer {
                 .subscribe(() -> {
                     mAdapter.setValues(list);
                     recyclerView.invalidate();
+                    if (list.isEmpty()) {
+                        recyclerView.setVisibility(View.GONE);
+                        emptyView.setVisibility(View.VISIBLE);
+                    } else {
+                        recyclerView.setVisibility(View.VISIBLE);
+                        emptyView.setVisibility(View.GONE);
+                    }
                 });
     }
 }
