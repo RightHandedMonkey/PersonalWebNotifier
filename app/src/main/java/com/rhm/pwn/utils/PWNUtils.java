@@ -5,6 +5,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.os.Build;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -43,5 +46,24 @@ public class PWNUtils {
         }
 
         return isInBackground;
+    }
+
+    public static String readResourceAsString(Context context, int resId) {
+        InputStream inputStream = context.getResources().openRawResource(resId);
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        int i;
+        try {
+            i = inputStream.read();
+            while (i != -1) {
+                byteArrayOutputStream.write(i);
+                i = inputStream.read();
+            }
+            inputStream.close();
+        } catch (IOException e) {
+            return null;
+        }
+        return byteArrayOutputStream.toString();
     }
 }

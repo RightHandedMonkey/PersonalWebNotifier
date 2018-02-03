@@ -112,11 +112,8 @@ public class PWNHomeActivityFragment extends Fragment implements Observer {
     }
 
     private void updateFromDb() {
-        Completable.fromAction(() -> {
-                    list = PWNDatabase.getInstance(PWNHomeActivityFragment.this.getContext())
-                            .urlCheckDao().getAll();
-
-                }
+        Completable.fromAction(
+                () -> list = PWNDatabase.getInstance(PWNHomeActivityFragment.this.getContext()).urlCheckDao().getAll()
         ).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(() -> {
