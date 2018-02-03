@@ -138,6 +138,7 @@ public class URLCheckTask {
                     }
                     urlc.setLastValue(tags.text());
                     urlc.setLastRunCode(URLCheck.CODE_RUN_SUCCESSFUL);
+                    urlc.setLastRunMessage("Last run successful");
                     urlc.setLastElapsedRealtime(SystemClock.elapsedRealtime());
                     Log.d("SAMB", URLCheckTask.class.getName() + " - Successfully completed retrieval URLCheck for: " + urlc.getUrl());
                 } else {

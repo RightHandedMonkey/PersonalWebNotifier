@@ -69,9 +69,15 @@ public class URLCheckJobScheduler extends JobService {
         return keepProcessing;
     }
 
+    public static void cleanOldTasks(Context context) {
+        PWNDatabase.getInstance(context).urlCheckDao().reduceTasks();
+        Log.d("SAMB", URLCheckJobScheduler.class.getName() + " - Removed tasks in db beyond the allowed limit");
+    }
+
     @WorkerThread
     public static void scheduleJob(Context context, JobScheduler js, Long delayInSec) {
         js.cancelAll();
+        cleanOldTasks(context);
         ComponentName mServiceComponent = new ComponentName(context, URLCheckJobScheduler.class);
         JobInfo.Builder builder = new JobInfo.Builder(0, mServiceComponent);
         long multiplier = 1000; //sec to milli

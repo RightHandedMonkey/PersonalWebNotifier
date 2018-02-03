@@ -32,6 +32,18 @@ public interface URLCheckDao {
     @Insert
     Long insertTask(PWNTask pwntask);
 
+    @Query("DELETE FROM pwntask\n" +
+            "WHERE id NOT IN (\n" +
+            "  SELECT id\n" +
+            "  FROM (\n" +
+            "    SELECT id\n" +
+            "    FROM pwntask\n" +
+            "    ORDER BY id DESC\n" +
+            "    LIMIT 20 -- keep this many records\n" +
+            "  ) foo\n" +
+            ");")
+    void reduceTasks();
+
     @Query("SELECT * FROM pwntask WHERE id = :id")
     PWNTask getTask(int id);
 
