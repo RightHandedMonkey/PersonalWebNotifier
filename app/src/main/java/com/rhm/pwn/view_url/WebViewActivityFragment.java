@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -46,6 +48,11 @@ public class WebViewActivityFragment extends Fragment {
             enableSelector = b.getBoolean(SELECTOR);
         }
         return inflater.inflate(R.layout.fragment_web_view, container, false);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_pwn_web, menu);
     }
 
     @Override
@@ -96,10 +103,12 @@ public class WebViewActivityFragment extends Fragment {
                     @Override
                     public void onPageFinished(WebView view, String url) {
                         super.onPageFinished(view, url);
-                        String js = "javascript:"+PWNUtils.readResourceAsString(getContext(), R.raw.selector_min);
-                        Assert.assertTrue(!TextUtils.isEmpty(js));
-                        view.loadUrl(js);
-                        Log.d("SAMB", this.getClass().getName() + " - Finished Loading page");
+                        if (isAdded()) {
+                            String js = "javascript:" + PWNUtils.readResourceAsString(getActivity(), R.raw.selector_min);
+                            Assert.assertTrue(!TextUtils.isEmpty(js));
+                            view.loadUrl(js);
+                            Log.d("SAMB", this.getClass().getName() + " - Finished Loading page");
+                        }
                     }
 
                     @Override
@@ -121,46 +130,6 @@ public class WebViewActivityFragment extends Fragment {
                     }
 
                 });
-        /*
-                @Override
-
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (null == url) {
-                return false;
-            }
-
-            try {
-                if (url.contains("http")) {
-                    AppUtils.openBrowser(mActivity, url);
-                    return true;
-                } else if (url.contains("@") && url.startsWith("mailto:")) {
-                    url = url.replace("mailto:", "").trim();
-                    Intent intent = new Intent(Intent.ACTION_SEND);
-                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{url});
-                    intent.setType("message/rfc822");
-                    startActivity(intent);
-                    return true;
-                } else if (url.toLowerCase().startsWith("tel:")) {
-                    Intent tel = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
-                    startActivity(tel);
-                    return true;
-                } else {
-                    return false;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return false;
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-            view.loadUrl("javascript:function () { $('body').html( $('body').html().replace(" +
-                    "/(\\d\\d\\d-\\d\\d\\d-\\d\\d\\d\\d)/g,'<a href=\"#\">$1</a>') ); }");
-        }
-         */
-
     }
 
 }

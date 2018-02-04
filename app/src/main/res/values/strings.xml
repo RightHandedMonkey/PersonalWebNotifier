@@ -2,6 +2,7 @@
     <string name="app_name">Web Notifier</string>
     <string name="title_activity_web_view">WebViewActivity</string>
     <string name="debug_action">Debug</string>
+    <string name="select_item">Select item</string>
     <string name="title_activity_debug">Debug Activity</string>
     <string name="no_data_available">There are no websites to check yet. \nCreate one by clicking the Add button</string>
 </resources>

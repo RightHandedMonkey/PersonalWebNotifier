@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class PWNUtils {
         return isInBackground;
     }
 
-    public static String readResourceAsString(Context context, int resId) {
+    public static String readResourceAsString(@NonNull Context context, int resId) {
         InputStream inputStream = context.getResources().openRawResource(resId);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

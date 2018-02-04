@@ -40,7 +40,7 @@ public class PWNHomeActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         if (BuildConfig.DEBUG) {
-            getMenuInflater().inflate(R.menu.menu_pwnhome, menu);
+            getMenuInflater().inflate(R.menu.menu_pwn_home, menu);
         }
         return true;
     }
