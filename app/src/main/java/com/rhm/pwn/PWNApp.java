@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.os.Build;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -30,6 +32,7 @@ public class PWNApp extends Application implements Observer {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         registerNotifications();
         URLCheckChangeNotifier.getNotifier().addObserver(this);
         Log.d("SAMB", "Application Created.");

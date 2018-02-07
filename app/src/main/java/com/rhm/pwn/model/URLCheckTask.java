@@ -128,6 +128,9 @@ public class URLCheckTask {
                 } catch (Selector.SelectorParseException e) {
                     urlc.setLastRunCode(URLCheck.CODE_RUN_FAILURE);
                     urlc.setLastRunMessage("Could not parse CSS selector. Please correct and retry.");
+                } catch (IllegalArgumentException e) {
+                    urlc.setLastRunCode(URLCheck.CODE_RUN_FAILURE);
+                    urlc.setLastRunMessage("CSS selector must not be empty. Please correct and retry.");
                 }
                 urlc.setLastChecked(Calendar.getInstance().getTime().toString());
                 if (tags != null) {

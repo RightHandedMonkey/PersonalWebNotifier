@@ -55,6 +55,9 @@
             android:name=".debug.DebugActivity"
             android:label="@string/title_activity_debug"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="279aa1c93dc6f64518c080a5b55b82730f63a625" />
     </application>
 
 </manifest>
