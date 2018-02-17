@@ -52,11 +52,14 @@ public class URLCheckJobScheduler extends JobService {
                     Log.e("SAMB", this.getClass().getName() + "Task was not found in database, so execution time could not be udpdated");
                 }
             }
+            jobFinished(jobParameters, false);
+
             if (urlChecks.size() < 1) {
                 keepProcessing = false;
                 stopSelf();
                 return;
             }
+
             long nextJobDelay = URLCheckTask.checkAll(urlChecks, this.getApplicationContext());
             //Start next JobScheduler
             if (nextJobDelay > 0 && nextJobDelay < Long.MAX_VALUE) {
@@ -69,7 +72,6 @@ public class URLCheckJobScheduler extends JobService {
             if (throwable != null) {
                 Log.e("SAMB", this.getClass().getName() + ", Error occurred reading from database", throwable);
             }
-
         });
         return keepProcessing;
     }
@@ -85,14 +87,14 @@ public class URLCheckJobScheduler extends JobService {
         cleanOldTasks(context);
         ComponentName mServiceComponent = new ComponentName(context, URLCheckJobScheduler.class);
         JobInfo.Builder builder = new JobInfo.Builder(0, mServiceComponent);
-        long multiplier = 1000; //sec to milli
-        long minStart = delayInSec - delayInSec / 10;
-        long maxStart = delayInSec + delayInSec / 10;
-        long minLatency = Math.max(1000, minStart * multiplier);
-        long deadline = Math.max(15000, maxStart * multiplier);
+        long multiplierMS = 1000; //sec to milli
+        long minStartDelayDivisor = 10;
+        long minStart = delayInSec - delayInSec / minStartDelayDivisor;
+        long maxStart = delayInSec + delayInSec / minStartDelayDivisor;
+        long minLatency = Math.max(1000, minStart * multiplierMS);
+        long deadline = Math.max(15000, maxStart * multiplierMS);
         builder.setMinimumLatency(minLatency); // wait - at least 1 second
-        builder.setOverrideDeadline(deadline); // maximum delay - at least 15 sec
-        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_NONE);
+        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
         builder.setRequiresCharging(false); // we don't care if the device is charging or no
         builder.setRequiresDeviceIdle(false);
 
@@ -104,7 +106,7 @@ public class URLCheckJobScheduler extends JobService {
         builder.setExtras(extras);
         js.schedule(builder.build());
 
-        Log.d("SAMB", URLCheckJobScheduler.class.getName() + " - Job queued to start in " + delayInSec + " seconds");
+        Log.d("SAMB", URLCheckJobScheduler.class.getName() + " - Job queued to start in " + minLatency/multiplierMS + " seconds");
     }
 
     @Override

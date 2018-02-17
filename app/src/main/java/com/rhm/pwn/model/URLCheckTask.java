@@ -83,8 +83,13 @@ public class URLCheckTask {
             List<URLCheck> list = PWNDatabase.getInstance(appContext).urlCheckDao().getAll();
             List<URLCheck> updated = new ArrayList<>();
             StreamSupport.stream(list)
-                    .filter(urlCheck -> urlCheck.isHasBeenUpdated())
-                    .forEach(urlCheck -> updated.add(urlCheck));
+                    .filter(urlCheck -> urlCheck.isHasBeenUpdated() && !urlCheck.isUpdateShown())
+                    .forEach(urlCheck -> {
+                        updated.add(urlCheck);
+                        urlCheck.setUpdateShown(true);
+                        //save that the tasks have been notified to the user
+                        PWNDatabase.getInstance(appContext).urlCheckDao().update(urlCheck);
+                    });
             if (updated != null && updated.size() > 0) {
                 //Set the notifications
                 String shortMessage = buildShortNotificationMessage(updated);

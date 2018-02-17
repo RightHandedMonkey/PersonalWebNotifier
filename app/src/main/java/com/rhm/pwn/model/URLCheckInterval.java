@@ -13,6 +13,7 @@ import java8.util.stream.StreamSupport;
  */
 
 public enum URLCheckInterval {
+//    INT_30_SEC(1 * 30, "30 Seconds"),
     INT_1_MIN(1 * 60, "1 Minute"),
     INT_15_MIN(15 * 60, "15 Minutes"),
     INT_1_HOUR(60 * 60, "1 Hour"),
