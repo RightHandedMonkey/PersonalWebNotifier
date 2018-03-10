@@ -151,7 +151,7 @@ public class URLCheckTask {
                     Log.d("SAMB", URLCheckTask.class.getName() + " - Successfully completed retrieval URLCheck for: " + urlc.getUrl());
                 } else {
                     urlc.setLastRunCode(URLCheck.CODE_RUN_FAILURE);
-                    urlc.setLastRunMessage("Could not find the section of the page to search for. Check that CSS selector still exists on page");
+                    urlc.setLastRunMessage("Could not find the section of the page to search for. Check that CSS selector still exists for the page\n"+urlc.getCssSelectorToInspect());
                     Log.e("SAMB", URLCheckTask.class.getName() + " - Failed css retrieval URLCheck for: " + urlc.getUrl());
                 }
                 //save urlc to db

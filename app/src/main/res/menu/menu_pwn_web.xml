@@ -3,9 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.rhm.pwn.home.PWNHomeActivity">
     <item
-        android:id="@+id/select_item"
-        android:title="@string/select_item"
-        android:icon="@drawable/loading_monkey_white"
+        android:id="@+id/loading_indicator_menu_item"
         android:enabled="false"
+        android:icon="@drawable/loading_monkey_white"
+        android:title="@string/select_item"
+        app:actionViewClass="android.widget.ImageView"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/select_menu_item"
+        android:enabled="false"
+        android:icon="@drawable/target"
+        android:title="@string/select_item"
+        android:visible="false"
+        app:actionViewClass="android.widget.ImageView"
         app:showAsAction="always" />
 </menu>

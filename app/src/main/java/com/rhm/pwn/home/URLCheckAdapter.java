@@ -1,5 +1,8 @@
 package com.rhm.pwn.home;
 
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,6 +25,9 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
 
     private List<URLCheck> values;
     public URLCheckSelectedAction action;
+    private Resources resources;
+    private ColorStateList defaultColors;
+
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -32,15 +38,17 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
         public TextView urlText;
         public TextView lastUpdateText;
         public ImageView notificationImage;
+//        public ImageView errorImage;
         public View layout;
 
         public ViewHolder(View v) {
             super(v);
             layout = v;
-            baseUrlText = (TextView) v.findViewById(R.id.baseUrlText);
-            urlText = (TextView) v.findViewById(R.id.urlText);
-            lastUpdateText = (TextView) v.findViewById(R.id.lastUpdateText);
-            notificationImage = (ImageView) v.findViewById(R.id.notificationImage);
+            baseUrlText = v.findViewById(R.id.baseUrlText);
+            urlText = v.findViewById(R.id.urlText);
+            lastUpdateText = v.findViewById(R.id.lastUpdateText);
+            notificationImage = v.findViewById(R.id.notificationImage);
+//            errorImage = v.findViewById(R.id.errorImage);
         }
     }
 
@@ -73,6 +81,7 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
     @Override
     public URLCheckAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
+        resources = parent.getResources();
         // create a new view
         LayoutInflater inflater = LayoutInflater.from(
                 parent.getContext());
@@ -80,6 +89,7 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
                 inflater.inflate(R.layout.url_check_row, parent, false);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v);
+        defaultColors =  vh.lastUpdateText.getTextColors(); //save original colors
         return vh;
     }
 
@@ -91,9 +101,16 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
         final URLCheck item = values.get(position);
         holder.baseUrlText.setText(item.getDisplayTitle());
         holder.urlText.setText(item.getDisplayBody());
-        holder.lastUpdateText.setText(item.getLastUpdated());
-        holder.lastUpdateText.setVisibility(TextUtils.isEmpty(item.getLastUpdated())?View.GONE : View.VISIBLE);
-        boolean updated = item.isHasBeenUpdated();
+        if (item.getLastRunCode() == URLCheck.CODE_RUN_FAILURE) {
+            holder.lastUpdateText.setText(item.getLastRunMessage());
+            holder.lastUpdateText.setTextColor(Color.RED);
+//            holder.errorImage.setVisibility(View.VISIBLE);
+        } else {
+            holder.lastUpdateText.setText(item.getLastUpdated());
+            holder.lastUpdateText.setTextColor(defaultColors);
+//            holder.errorImage.setVisibility(View.GONE);
+        }
+        holder.lastUpdateText.setVisibility(TextUtils.isEmpty(holder.lastUpdateText.getText())?View.GONE : View.VISIBLE);
         holder.notificationImage.setVisibility(item.isHasBeenUpdated()?View.VISIBLE : View.GONE);
         holder.layout.setOnClickListener(v -> action.onSelectedURLCheck(item));
         holder.layout.setOnLongClickListener(view -> action.onEditURLCheck(item));

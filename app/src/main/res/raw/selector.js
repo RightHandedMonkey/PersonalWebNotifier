@@ -345,7 +345,7 @@ function context(event) {
   var sel_gen = new CssSelectorGenerator();
   var sel = sel_gen.getSelector(event.target);
   var xpath = getXPathForElement(event.target, document);
-  alert("sel: " + sel + "\r\nContents: " + event.target.innerHTML);
+  Android.onCssSelectorClicked(sel);
 }
 
 //Capture clicking on each item

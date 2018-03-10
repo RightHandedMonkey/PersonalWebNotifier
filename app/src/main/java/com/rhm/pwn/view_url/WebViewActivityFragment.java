@@ -1,5 +1,6 @@
 package com.rhm.pwn.view_url;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -36,8 +38,21 @@ public class WebViewActivityFragment extends Fragment {
     public static String SELECTOR = "selector";
 
     public boolean enableSelector = false;
+    private PWNInteractions interator;
 
     public WebViewActivityFragment() {
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        interator = (PWNInteractions) getActivity();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        interator = null;
     }
 
     @Override
@@ -53,6 +68,12 @@ public class WebViewActivityFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_pwn_web, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d("SAMB", "onOptionsItemSelected() called - for item#" + item.getItemId());
+        return false;
     }
 
     @Override
@@ -107,6 +128,9 @@ public class WebViewActivityFragment extends Fragment {
                             String js = "javascript:" + PWNUtils.readResourceAsString(getActivity(), R.raw.selector_min);
                             Assert.assertTrue(!TextUtils.isEmpty(js));
                             view.loadUrl(js);
+                            if (interator != null) {
+                                interator.handlePageLoaded();
+                            }
                             Log.d("SAMB", this.getClass().getName() + " - Finished Loading page");
                         }
                     }
@@ -130,6 +154,7 @@ public class WebViewActivityFragment extends Fragment {
                     }
 
                 });
+        wv.addJavascriptInterface(new WebInterface(this.getContext(), interator), "Android");
     }
 
 }
