@@ -42,15 +42,12 @@ public class DebugActivity extends AppCompatActivity {
                     JobScheduler js = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
                     List<JobInfo> jobs = js.getAllPendingJobs();
 
-                    String msg = "Pending Jobs:";
+                    String msg = "Pending Job";
                     for(JobInfo job: jobs) {
                         Long minLatS = job.getMinLatencyMillis()/1000;
                         String timeFormatter= "%d hours, or %d mins, or %02d secs";
                         String minLatHuman = String.format(timeFormatter, (minLatS/60/60), minLatS/60, minLatS);
-//                        Long deadlineS = job.getMaxExecutionDelayMillis()/1000;
-//                        String deadlineHuman = String.format(timeFormatter, deadlineS/60/60, deadlineS/60, deadlineS%60);
-                        msg += minLatHuman;
-//                        msg += String.format("Job#%d, minLat:%s, deadline:%s",job.getId(), minLatHuman, deadlineHuman);
+                        msg += "Id# "+job.getId()+"\r\n"+minLatHuman+"\r\n";
                     }
                     msg += "\r\nJob history:";
                     for (PWNTask p : list) {
