@@ -12,7 +12,7 @@ import android.util.Log;
  * Created by sambo on 8/28/2017.
  */
 
-@Database(entities = {URLCheck.class, PWNTask.class}, version = 1)
+@Database(entities = {URLCheck.class, PWNTask.class}, version = 2)
 public abstract class PWNDatabase extends RoomDatabase {
     public abstract URLCheckDao urlCheckDao();
 
@@ -22,7 +22,7 @@ public abstract class PWNDatabase extends RoomDatabase {
         if (ourInstance == null) {
             ourInstance = Room.databaseBuilder(appContext,
                     PWNDatabase.class, "PWNDb")
-                    //.addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2)
                     .build();
         }
         return ourInstance;
@@ -32,6 +32,7 @@ public abstract class PWNDatabase extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             Log.d("SAMB", "Running database migration");
+            database.execSQL("ALTER TABLE pwntask ADD COLUMN scheduledExecutionMinTime TEXT");
         }
     };
 }

@@ -10,10 +10,13 @@ import android.os.PersistableBundle;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+
 import com.rhm.pwn.model.PWNDatabase;
 import com.rhm.pwn.model.PWNTask;
 import com.rhm.pwn.model.URLCheck;
@@ -45,8 +48,8 @@ public class URLCheckJobScheduler extends JobService {
                 PWNTask task = PWNDatabase.getInstance(getApplicationContext()).urlCheckDao().getTask(taskid);
                 //Note: It's possible the task was in memory but removed from the database. Skip if not found
                 if (task != null) {
-                    task.setActualExecutionTime(PWNUtils.getCurrentSystemDate());
-                    Log.d("SAMB", this.getClass().getName() + " Job #" + taskid + " actual execution date: " + PWNUtils.getCurrentSystemDate());
+                    task.setActualExecutionTime(PWNUtils.getCurrentSystemFormattedDate());
+                    Log.d("SAMB", this.getClass().getName() + " Job #" + taskid + " actual execution date: " + PWNUtils.getCurrentSystemFormattedDate());
                     PWNDatabase.getInstance(getApplicationContext()).urlCheckDao().updateTask(task);
                 } else {
                     Log.e("SAMB", this.getClass().getName() + "Task was not found in database, so execution time could not be udpdated");
@@ -86,27 +89,29 @@ public class URLCheckJobScheduler extends JobService {
         js.cancelAll();
         cleanOldTasks(context);
         ComponentName mServiceComponent = new ComponentName(context, URLCheckJobScheduler.class);
-        JobInfo.Builder builder = new JobInfo.Builder(0, mServiceComponent);
         long multiplierMS = 1000; //sec to milli
         long minStartDelayDivisor = 10;
         long minStart = delayInSec - delayInSec / minStartDelayDivisor;
         long maxStart = delayInSec + delayInSec / minStartDelayDivisor;
         long minLatency = Math.max(1000, minStart * multiplierMS);
         long deadline = Math.max(15000, maxStart * multiplierMS);
+        Calendar timeout = Calendar.getInstance();
+        timeout.setTimeInMillis((new Date()).getTime() + minLatency);
+
+        // Extras, work duration.
+        PWNTask task = new PWNTask(PWNUtils.getCurrentSystemFormattedDate(), PWNUtils.getFormattedDate(timeout.getTime()));
+        long taskId = PWNDatabase.getInstance(context).urlCheckDao().insertTask(task);
+        JobInfo.Builder builder = new JobInfo.Builder((int) taskId, mServiceComponent);
         builder.setMinimumLatency(minLatency); // wait - at least 1 second
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
         builder.setRequiresCharging(false); // we don't care if the device is charging or no
         builder.setRequiresDeviceIdle(false);
-
-        // Extras, work duration.
-        PWNTask task = new PWNTask(minLatency, deadline, PWNUtils.getCurrentSystemDate());
-        long taskId = PWNDatabase.getInstance(context).urlCheckDao().insertTask(task);
         PersistableBundle extras = new PersistableBundle();
         extras.putLong(PWNTask.class.getName(), taskId);
         builder.setExtras(extras);
         js.schedule(builder.build());
 
-        Log.d("SAMB", URLCheckJobScheduler.class.getName() + " - Job queued to start in " + minLatency/multiplierMS + " seconds");
+        Log.d("SAMB", URLCheckJobScheduler.class.getName() + " - Job queued to start as early as: " + PWNUtils.getFormattedDate(timeout.getTime()));
     }
 
     @Override

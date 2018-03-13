@@ -45,19 +45,19 @@ public class DebugActivity extends AppCompatActivity {
                     String msg = "Pending Jobs:";
                     for(JobInfo job: jobs) {
                         Long minLatS = job.getMinLatencyMillis()/1000;
-                        String timeFormatter= "%d days:%d min:%02d sec";
-                        String minLatHuman = String.format(timeFormatter, minLatS/60/60, minLatS/60, minLatS%60);
-                        Long deadlineS = job.getMaxExecutionDelayMillis()/1000;
-                        String deadlineHuman = String.format(timeFormatter, deadlineS/60/60, deadlineS/60, deadlineS%60);
-
-                        msg += String.format("Job#%d, minLat:%s, deadline:%s",job.getId(), minLatHuman, deadlineHuman);
+                        String timeFormatter= "%d hours, or %d mins, or %02d secs";
+                        String minLatHuman = String.format(timeFormatter, (minLatS/60/60), minLatS/60, minLatS);
+//                        Long deadlineS = job.getMaxExecutionDelayMillis()/1000;
+//                        String deadlineHuman = String.format(timeFormatter, deadlineS/60/60, deadlineS/60, deadlineS%60);
+                        msg += minLatHuman;
+//                        msg += String.format("Job#%d, minLat:%s, deadline:%s",job.getId(), minLatHuman, deadlineHuman);
                     }
                     msg += "\r\nJob history:";
                     for (PWNTask p : list) {
                         msg += p.toString() + "\r\n";
                     }
+                    msg += "\r\n";
                     text.setText(msg);
-                    Log.d("SAMB", "Message: "+msg);
                 });
     }
 

@@ -17,7 +17,7 @@ public class WebViewActivity extends AppCompatActivity implements PWNInteraction
 
     private ImageView loadingIndicator;
     private MenuItem selectMenuItem;
-    private ImageView selectMenuItemView;
+    private MenuItem selectMenuItemActive;
     private boolean stopped = false;
     private boolean loaded = false;
     public boolean selectorActive = false;
@@ -37,21 +37,20 @@ public class WebViewActivity extends AppCompatActivity implements PWNInteraction
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_pwn_web, menu);
-        selectMenuItem = menu.getItem(1);
-        loadingIndicator = (ImageView) menu.findItem(R.id.loading_indicator_menu_item).getActionView();
-        loadingIndicator.setVisibility(View.VISIBLE);
-        loadingIndicator.setBackground(getDrawable(R.drawable.loading_monkey_white));
-        loadingIndicator.setScaleType(ImageView.ScaleType.FIT_XY);
-        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.loading_animation);
-        loadingIndicator.setAnimation(animation);
-        animation.setRepeatCount(Animation.INFINITE);
-        animation.setRepeatMode(Animation.RESTART);
+        selectMenuItem = menu.findItem(R.id.select_menu_item_inactive);
+        selectMenuItemActive = menu.findItem(R.id.select_menu_item_active);
 
-        selectMenuItemView = (ImageView) menu.findItem(R.id.select_menu_item).getActionView();
-        selectMenuItemView.setBackground(getDrawable(R.drawable.target));
-
-
+        if (loadingIndicator == null) {
+            loadingIndicator = (ImageView) menu.findItem(R.id.loading_indicator_menu_item).getActionView();
+            loadingIndicator.setVisibility(View.VISIBLE);
+            loadingIndicator.setBackground(getDrawable(R.drawable.loading_monkey_white));
+            loadingIndicator.setScaleType(ImageView.ScaleType.FIT_XY);
+            Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
+                    R.anim.loading_animation);
+            loadingIndicator.setAnimation(animation);
+            animation.setRepeatCount(Animation.INFINITE);
+            animation.setRepeatMode(Animation.RESTART);
+        }
         return true;
     }
 
@@ -64,14 +63,13 @@ public class WebViewActivity extends AppCompatActivity implements PWNInteraction
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d("SAMB", "onOptionsItemSelected() called - for item#" + item.getItemId());
+        Log.d("SAMB", getClass().getName() + "::onOptionsItemSelected() called - for item#" + item.getItemId());
 
-        if (item.getItemId() == 1) {
-            if (selectorActive) {
-                selectionInactive();
-            } else {
-                selectionActive();
-            }
+        if (item.getItemId() == R.id.select_menu_item_active) {
+            selectionInactive();
+            return true;
+        } else if (item.getItemId() == R.id.select_menu_item_inactive) {
+            selectionActive();
             return true;
         }
         return false;
@@ -80,9 +78,6 @@ public class WebViewActivity extends AppCompatActivity implements PWNInteraction
     @Override
     public void handlePageLoaded() {
         loaded = true;
-        selectMenuItem.setEnabled(true);
-        selectMenuItem.setVisible(true);
-        selectMenuItemView.setEnabled(true);
         selectionInactive();
         if (loadingIndicator != null) {
             loadingIndicator.clearAnimation();
@@ -98,9 +93,7 @@ public class WebViewActivity extends AppCompatActivity implements PWNInteraction
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    if (!stopped) {
-                        loadingIndicator.setVisibility(View.GONE);
-                    }
+                    loadingIndicator.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -114,18 +107,24 @@ public class WebViewActivity extends AppCompatActivity implements PWNInteraction
     @Override
     public void selectionActive() {
         Log.d("SAMB", "selectionActive() called");
-        selectMenuItemView.setBackground(getDrawable(R.drawable.target_active));
+        selectorActive = true;
+        selectMenuItemActive.setVisible(true);
+        selectMenuItem.setVisible(false);
+        loadingIndicator.setVisibility(View.GONE);
     }
 
     @Override
     public void selectionInactive() {
         Log.d("SAMB", "selectionInactive() called");
-        selectMenuItemView.setBackground(getDrawable(R.drawable.target));
+        selectorActive = false;
+        selectMenuItemActive.setVisible(false);
+        selectMenuItem.setVisible(true);
     }
 
     @Override
     public boolean handleCSSSelected(String css) {
         Log.d("SAMB", "handleCSSSelected(...) called");
+        selectionInactive();
         return false;
     }
 }

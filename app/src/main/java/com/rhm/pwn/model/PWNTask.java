@@ -14,13 +14,13 @@ public class PWNTask {
     long overrideDeadline;
     String actualExecutionTime;
     String createJobTime;
+    String scheduledExecutionMinTime;
 
     public PWNTask() {}
 
-    public PWNTask(long latency, long deadline, String createTime) {
-        minLatency = latency;
-        overrideDeadline = deadline;
-        createJobTime = createTime;
+    public PWNTask(String createTime, String scheduledExecutionMinTime) {
+        this.createJobTime = createTime;
+        this.scheduledExecutionMinTime = scheduledExecutionMinTime;
     }
 
     @Override
@@ -40,11 +40,12 @@ public class PWNTask {
 
     @Override
     public String toString() {
-        Long minLatS = minLatency/1000;
-        String minLatHuman = String.format("%d:%d:%02d", minLatS/60/60, minLatS/60, minLatS%60);
-        Long deadlineS = overrideDeadline/1000;
-        String deadlineHuman = String.format("%d:%d:%02d", deadlineS/60/60, deadlineS/60, deadlineS%60);
-        String msg = String.format("Id#%d minLat:%s deadline:%s \r\nsched:%s \r\nactual:%s", id, minLatHuman, deadlineHuman, createJobTime, actualExecutionTime);
+//        Long minLatS = minLatency/1000;
+//        String minLatHuman = String.format("%d:%d:%02d", minLatS/60/60, minLatS/60, minLatS%60);
+//        Long deadlineS = overrideDeadline/1000;
+//        String deadlineHuman = String.format("%d:%d:%02d", deadlineS/60/60, deadlineS/60, deadlineS%60);
+        String msg = String.format("Id#%d \r\ncreated:%s \n" +
+                "sched min:%s \r\nactual:%s", id, createJobTime, scheduledExecutionMinTime, actualExecutionTime);
         return msg;
     }
 
@@ -96,5 +97,13 @@ public class PWNTask {
 
     public void setCreateJobTime(String createJobTime) {
         this.createJobTime = createJobTime;
+    }
+
+    public String getScheduledExecutionMinTime() {
+        return scheduledExecutionMinTime;
+    }
+
+    public void setScheduledExecutionMinTime(String scheduledExecutionMinTime) {
+        this.scheduledExecutionMinTime = scheduledExecutionMinTime;
     }
 }

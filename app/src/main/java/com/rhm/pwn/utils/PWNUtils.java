@@ -18,9 +18,13 @@ import java.util.List;
  */
 
 public class PWNUtils {
-    public static String getCurrentSystemDate() {
+    public static String getCurrentSystemFormattedDate() {
+        return getFormattedDate(new Date());
+    }
+
+    public static String getFormattedDate(Date d) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
-        String currentDateandTime = sdf.format(new Date());
+        String currentDateandTime = sdf.format(d);
         return currentDateandTime;
     }
 

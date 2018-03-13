@@ -10,11 +10,15 @@
         app:actionViewClass="android.widget.ImageView"
         app:showAsAction="always" />
     <item
-        android:id="@+id/select_menu_item"
-        android:enabled="false"
+        android:id="@+id/select_menu_item_inactive"
         android:icon="@drawable/target"
         android:title="@string/select_item"
         android:visible="false"
-        app:actionViewClass="android.widget.ImageView"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/select_menu_item_active"
+        android:icon="@drawable/target_active"
+        android:title="@string/select_item"
+        android:visible="false"
         app:showAsAction="always" />
 </menu>

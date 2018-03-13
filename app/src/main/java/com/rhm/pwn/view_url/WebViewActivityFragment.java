@@ -66,17 +66,6 @@ public class WebViewActivityFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_pwn_web, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d("SAMB", "onOptionsItemSelected() called - for item#" + item.getItemId());
-        return false;
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         Log.d("SAMB", this.getClass().getName() + ", onViewCreated()");
 

@@ -43,9 +43,11 @@ public class PWNHomeActivityFragment extends Fragment implements Observer {
     URLCheckSelectedAction urlCheckAction = new URLCheckSelectedAction() {
         @Override
         public void onSelectedURLCheck(URLCheck urlc) {
+            Log.d("SAMB", this.getClass().getName() + ", onSelectedURLCheck() called");
             Intent i = new Intent(PWNHomeActivityFragment.this.getContext(), WebViewActivity.class);
             i.putExtra(URLCheck.class.getName(), urlc.getId());
             startActivity(i);
+            Log.d("SAMB", this.getClass().getName() + ", onSelectedURLCheck() finished");
         }
 
         @Override

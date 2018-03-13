@@ -47,7 +47,7 @@ public interface URLCheckDao {
     @Query("SELECT * FROM pwntask WHERE id = :id")
     PWNTask getTask(int id);
 
-    @Query("SELECT * FROM pwntask")
+    @Query("SELECT * FROM pwntask ORDER BY id DESC")
     List<PWNTask> getTasks();
 
     @Update

@@ -53,7 +53,6 @@ public class URLCheckService extends Service {
                 nextJobDelay = URLCheckTask.checkAll(urlChecks, this.getApplicationContext());
                 started = true;
                 Log.d("SAMB", this.getClass().getName() + " - Scheduling next job to happen in " + nextJobDelay + " secs");
-                //URLCheckJobScheduler.createJob(this.getApplicationContext(), nextJobDelay);
                 //check if service already running
                 URLCheckJobScheduler.scheduleJob(this.getApplicationContext(), (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE), nextJobDelay);
             } else {
