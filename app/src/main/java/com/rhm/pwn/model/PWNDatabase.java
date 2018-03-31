@@ -48,16 +48,4 @@ public abstract class PWNDatabase extends RoomDatabase {
                     "\t\"datetime\" Date NOT NULL );");
         }
     };
-    /*
-CREATE TABLE if not exists "pwnlog"(
-	"id" Integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-	"logLevel" Text NOT NULL,
-	"classname" Text NOT NULL,
-	"message" Text NOT NULL,
-	"datetime" Date NOT NULL );
-
-	    data class PWNLog constructor(val logLevel: Char, val classname: String, val message: String) {
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
-     */
 }
