@@ -8,6 +8,7 @@
         android:icon="@drawable/loading_monkey_white"
         android:title="@string/select_item"
         app:actionViewClass="android.widget.ImageView"
+        android:visible="false"
         app:showAsAction="always" />
     <item
         android:id="@+id/select_menu_item_inactive"
@@ -19,6 +20,6 @@
         android:id="@+id/select_menu_item_active"
         android:icon="@drawable/target_active"
         android:title="@string/select_item"
-        android:visible="false"
+        android:visible="true"
         app:showAsAction="always" />
 </menu>

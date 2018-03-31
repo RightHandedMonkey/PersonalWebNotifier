@@ -93,7 +93,7 @@ public class WebViewActivityFragment extends Fragment {
                             //save urlc to db
                             Completable.fromAction(() -> {
                                 PWNDatabase.getInstance(getActivity().getApplicationContext()).urlCheckDao().update(urlCheck);
-                                URLCheckChangeNotifier.getNotifier().update(false);
+                                URLCheckChangeNotifier.getNotifier().update(true);
                             }).subscribeOn(Schedulers.io())
                                     .subscribe();
                         }
