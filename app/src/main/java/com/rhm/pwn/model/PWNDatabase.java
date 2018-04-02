@@ -12,7 +12,7 @@ import android.util.Log;
  * Created by sambo on 8/28/2017.
  */
 
-@Database(entities = {URLCheck.class, PWNTask.class}, version = 3)
+@Database(entities = {URLCheck.class, PWNTask.class, PWNLog.class}, version = 3)
 public abstract class PWNDatabase extends RoomDatabase {
     public abstract URLCheckDao urlCheckDao();
 

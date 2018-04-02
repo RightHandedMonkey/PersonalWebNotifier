@@ -18,6 +18,7 @@ import java.util.Observer;
 import com.rhm.pwn.home.URLCheckJobScheduler;
 import com.rhm.pwn.home.URLCheckService;
 import com.rhm.pwn.model.PWNDatabase;
+import com.rhm.pwn.model.PWNLog;
 import com.rhm.pwn.model.URLCheckChangeNotifier;
 
 /**
@@ -32,6 +33,7 @@ public class PWNApp extends Application implements Observer {
     @Override
     public void onCreate() {
         super.onCreate();
+        PWNLog.appContext = getApplicationContext();
         Fabric.with(this, new Crashlytics());
         registerNotifications();
         URLCheckChangeNotifier.getNotifier().addObserver(this);

@@ -32,6 +32,9 @@ public interface URLCheckDao {
     @Insert
     Long insertTask(PWNTask pwntask);
 
+    @Insert
+    Long insertLog(PWNLog log);
+
     @Query("DELETE FROM pwntask\n" +
             "WHERE id NOT IN (\n" +
             "  SELECT id\n" +

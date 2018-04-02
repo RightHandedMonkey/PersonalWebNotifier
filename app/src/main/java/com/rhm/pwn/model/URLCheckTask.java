@@ -57,10 +57,13 @@ public class URLCheckTask {
     public static long checkAll(List<URLCheck> urlChecks, Context appContext) {
         COUNT = 0;
         TOTAL = 0;
+        PWNLog.log(URLCheckTask.class.getName(), "Start check task");
         long curElapsedTime = SystemClock.elapsedRealtime();
         long minIntervalRequested = Long.MAX_VALUE;
+        int num = 0;
         for (URLCheck urlCheck : urlChecks) {
             minIntervalRequested = Math.min(minIntervalRequested, urlCheck.getCheckInterval());
+            PWNLog.log(URLCheckTask.class.getName(), "Update check for #"+num+", "+urlCheck.getDisplayTitle());
             if (URLCheckTask.doesURLCheckRequireUpdate(urlCheck, curElapsedTime)) {
                 TOTAL++;
                 Log.d("SAMB", URLCheckTask.class.getName() + " - Queuing URLCheck for: " + urlCheck.getUrl());
@@ -68,6 +71,7 @@ public class URLCheckTask {
             } else {
                 Log.d("SAMB", URLCheckTask.class.getName() + " - Skipping URLCheck for: " + urlCheck.getUrl());
             }
+            num++;
         }
 
         if (urlChecks.size() > 0) {
