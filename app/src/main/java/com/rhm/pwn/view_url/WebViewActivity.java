@@ -105,7 +105,9 @@ public class WebViewActivity extends AppCompatActivity implements PWNInteraction
             loadingIndicator.setVisibility(View.GONE);
             loadingIndicator.clearAnimation();
         }
-        loadingIndicatorMenuItem.setVisible(false);
+        if (loadingIndicatorMenuItem != null) {
+            loadingIndicatorMenuItem.setVisible(false);
+        }
     }
 
     @Override
