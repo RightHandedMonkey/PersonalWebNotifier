@@ -7,9 +7,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -38,7 +35,7 @@ public class WebViewActivityFragment extends Fragment {
     public static String SELECTOR = "selector";
 
     public boolean enableSelector = false;
-    private PWNInteractions interator;
+    private PWNInteractions interactions;
 
     public WebViewActivityFragment() {
     }
@@ -46,13 +43,13 @@ public class WebViewActivityFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        interator = (PWNInteractions) getActivity();
+        interactions = (PWNInteractions) getActivity();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        interator = null;
+        interactions = null;
     }
 
     @Override
@@ -113,12 +110,13 @@ public class WebViewActivityFragment extends Fragment {
                     @Override
                     public void onPageFinished(WebView view, String url) {
                         super.onPageFinished(view, url);
+                        Log.d("SAMB", "onPageFinished() called for '" + url.toString() + "'");
                         if (isAdded()) {
                             String js = "javascript:" + PWNUtils.readResourceAsString(getActivity(), R.raw.selector_min);
                             Assert.assertTrue(!TextUtils.isEmpty(js));
                             view.loadUrl(js);
-                            if (interator != null) {
-                                interator.handlePageLoaded();
+                            if (interactions != null) {
+                                interactions.handlePageLoaded();
                             }
                             Log.d("SAMB", this.getClass().getName() + " - Finished Loading page");
                         }
@@ -126,24 +124,36 @@ public class WebViewActivityFragment extends Fragment {
 
                     @Override
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+                        boolean handled = true;
+
                         if (null == url) {
-                            return false;
+                            handled = false;
                         }
 
+                        Exception exception = null;
                         try {
-                            if (url.contains("http")) {
-                                return true;
-                            } else {
-                                return false;
+                            if (handled) {
+                                if (url.contains("http")) {
+                                    handled = true;
+                                } else {
+                                    handled = false;
+                                }
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            exception = e;
                         }
-                        return false;
+                        if (exception != null) {
+                            Log.e("SAMB", "shouldOverrideUrlLoading() failed, handled = " + handled + ", called for '" + url.toString() + "'");
+                            Log.e("SAMB", "Failure", exception);
+                        } else {
+                            Log.d("SAMB", "shouldOverrideUrlLoading() handled = " + handled + ", called for '" + url.toString() + "'");
+                        }
+                        return handled;
                     }
 
                 });
-        wv.addJavascriptInterface(new WebInterface(this.getContext(), interator), "Android");
+        wv.addJavascriptInterface(new WebInterface(this.getContext(), interactions), "Android");
     }
 
 }
