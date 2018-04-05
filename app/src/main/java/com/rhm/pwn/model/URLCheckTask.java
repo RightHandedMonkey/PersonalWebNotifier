@@ -67,9 +67,11 @@ public class URLCheckTask {
             if (URLCheckTask.doesURLCheckRequireUpdate(urlCheck, curElapsedTime)) {
                 TOTAL++;
                 Log.d("SAMB", URLCheckTask.class.getName() + " - Queuing URLCheck for: " + urlCheck.getUrl());
+                PWNLog.log(URLCheckTask.class.getName(), "Scheduling check for #"+num);
                 URLCheckTask.handleURLCheckAction(urlCheck, appContext);
             } else {
                 Log.d("SAMB", URLCheckTask.class.getName() + " - Skipping URLCheck for: " + urlCheck.getUrl());
+                PWNLog.log(URLCheckTask.class.getName(), "Skipping check for #"+num);
             }
             num++;
         }
@@ -82,6 +84,7 @@ public class URLCheckTask {
     }
 
     public static void checkForNotification(Context appContext) {
+        PWNLog.log(URLCheckTask.class.getName(), "Checking if notifications are needed");
 
         Completable.fromAction(() -> {
             List<URLCheck> list = PWNDatabase.getInstance(appContext).urlCheckDao().getAll();
@@ -89,36 +92,51 @@ public class URLCheckTask {
             StreamSupport.stream(list)
                     .filter(urlCheck -> urlCheck.isHasBeenUpdated() && !urlCheck.isUpdateShown())
                     .forEach(urlCheck -> {
+                        PWNLog.log(URLCheckTask.class.getName(), "Found url updated at: "+urlCheck.getDisplayTitle());
                         updated.add(urlCheck);
                         urlCheck.setUpdateShown(true);
                         //save that the tasks have been notified to the user
                         PWNDatabase.getInstance(appContext).urlCheckDao().update(urlCheck);
                     });
             if (updated != null && updated.size() > 0) {
+                PWNLog.log(URLCheckTask.class.getName(), "Some urls updated, prepare to show notifications for #"+updated.size());
                 //Set the notifications
                 String shortMessage = buildShortNotificationMessage(updated);
                 String longMessage = buildLongNotificationMessage(updated);
                 //create notification
                 if (PWNUtils.isAppIsInBackground(appContext)) {
+                    PWNLog.log(URLCheckTask.class.getName(), "App in the background, showing notifications");
                     createNotifications(appContext, updated.get(0).title, shortMessage, longMessage, updated);
+                } else {
+                    PWNLog.log(URLCheckTask.class.getName(), "App in the foreground, suppressing notifications");
                 }
                 //create system badge
+            } else {
+
             }
         }).subscribeOn(Schedulers.io())
                 .subscribe();
     }
 
     private static void checkIfAllDone(Context appContext) {
+        PWNLog.log(URLCheckTask.class.getName(), "Checking if complete");
+
         if (COUNT >= TOTAL) {
+            PWNLog.log(URLCheckTask.class.getName(), "Complete, broadcasting results update");
             URLCheckJobCompletedNotifier.getNotifier().update();
             URLCheckChangeNotifier.getNotifier().update(false);
             checkForNotification(appContext);
+        } else {
+            PWNLog.log(URLCheckTask.class.getName(), "Not yet complete");
         }
     }
 
 
     public static void handleURLCheckAction(URLCheck urlc, Context appContext) {
+        PWNLog.log(URLCheckTask.class.getName(), "Beginning check for "+urlc.getDisplayTitle());
+
         if (!urlc.isUrlValid()) {
+            PWNLog.log(URLCheckTask.class.getName(), "Skipping, URL not valid");
             return;
         }
         Retrofit retrofit = PWNRetroFitConnector.getInstance(urlc.getBaseUrl());
@@ -126,23 +144,38 @@ public class URLCheckTask {
         getPageService.GetPageAsString(urlc.getUrl()).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
+                PWNLog.log(URLCheckTask.class.getName(), "Got response");
                 Document doc = Jsoup.parse(response.body().toString());
+                PWNLog.log(URLCheckTask.class.getName(), "JSON Parsed");
                 Element tags = null;
                 try {
+                    PWNLog.log(URLCheckTask.class.getName(), "Searching for CSS");
                     tags = doc.select(urlc.getCssSelectorToInspect()).first();
+                    if (tags != null) {
+                        PWNLog.log(URLCheckTask.class.getName(), "CSS item found");
+                    } else {
+                        PWNLog.log(URLCheckTask.class.getName(), "CSS item NOT found");
+                    }
+                    PWNLog.log(URLCheckTask.class.getName(), "Getting page title");
                     String title = doc.select("title").first().text();
                     if (!TextUtils.isEmpty(title)) {
                         urlc.setTitle(title);
+                        PWNLog.log(URLCheckTask.class.getName(), "Found page title: "+title);
+                    } else {
+                        PWNLog.log(URLCheckTask.class.getName(), "Page title NOT found");
                     }
                 } catch (Selector.SelectorParseException e) {
+                    PWNLog.log(URLCheckTask.class.getName(), "Error parsing selector\r\n"+e.getMessage(), "E");
                     urlc.setLastRunCode(URLCheck.CODE_RUN_FAILURE);
                     urlc.setLastRunMessage("Could not parse CSS selector. Please correct and retry.");
                 } catch (IllegalArgumentException e) {
+                    PWNLog.log(URLCheckTask.class.getName(), "Empty or invalid CSS\r\n"+e.getMessage(), "E");
                     urlc.setLastRunCode(URLCheck.CODE_RUN_FAILURE);
                     urlc.setLastRunMessage("CSS selector must not be empty. Please correct and retry.");
                 }
                 urlc.setLastChecked(Calendar.getInstance().getTime().toString());
                 if (tags != null) {
+                    PWNLog.log(URLCheckTask.class.getName(), "CSS result tag was ok");
                     //the content has changed from the last time
                     if (!urlc.lastValue.equals(tags.text())) {
                         urlc.setHasBeenUpdated(true);
@@ -154,6 +187,7 @@ public class URLCheckTask {
                     urlc.setLastElapsedRealtime(SystemClock.elapsedRealtime());
                     Log.d("SAMB", URLCheckTask.class.getName() + " - Successfully completed retrieval URLCheck for: " + urlc.getUrl());
                 } else {
+                    PWNLog.log(URLCheckTask.class.getName(), "CSS result tag was NULL");
                     urlc.setLastRunCode(URLCheck.CODE_RUN_FAILURE);
                     urlc.setLastRunMessage("Could not find the section of the page to search for. Check that CSS selector still exists for the page\n"+urlc.getCssSelectorToInspect());
                     Log.e("SAMB", URLCheckTask.class.getName() + " - Failed css retrieval URLCheck for: " + urlc.getUrl());
@@ -161,6 +195,7 @@ public class URLCheckTask {
                 //save urlc to db
                 Completable.fromAction(() -> {
                     PWNDatabase.getInstance(appContext).urlCheckDao().update(urlc);
+                    PWNLog.log(URLCheckTask.class.getName(), "Results saved to DB");
                     COUNT++;
                     //Notify observers an update is ready
                     checkIfAllDone(appContext);
@@ -173,6 +208,7 @@ public class URLCheckTask {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
+                PWNLog.log(URLCheckTask.class.getName(), "Failure for "+urlc.getDisplayTitle()+" of \r\n"+t.getMessage());
                 Log.e("SAMB", "Error Occurred", t);
                 urlc.setLastChecked(Calendar.getInstance().getTime().toString());
                 urlc.setLastRunCode(URLCheck.CODE_RUN_FAILURE);
@@ -223,6 +259,7 @@ public class URLCheckTask {
             for (URLCheck urlc : updatedItems) {
                 urlc.setUpdateShown(true);
             }
+            PWNLog.log(URLCheckTask.class.getName(), "Marking url checks as having been displayed to the user in DB");
             PWNDatabase.getInstance(appContext).urlCheckDao().update(updatedItems);
         }).subscribeOn(Schedulers.io())
                 .subscribe();

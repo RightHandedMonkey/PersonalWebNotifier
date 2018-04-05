@@ -35,6 +35,9 @@ public interface URLCheckDao {
     @Insert
     Long insertLog(PWNLog log);
 
+    @Query("SELECT * FROM pwnlog ORDER BY id ASC LIMIT 500")
+    List<PWNLog> getLogs();
+
     @Query("DELETE FROM pwntask\n" +
             "WHERE id NOT IN (\n" +
             "  SELECT id\n" +

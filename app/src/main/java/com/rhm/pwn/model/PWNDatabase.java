@@ -36,16 +36,21 @@ public abstract class PWNDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE pwntask ADD COLUMN scheduledExecutionMinTime TEXT");
         }
     };
+    /*
+    TableInfo{name='PWNLog', columns={classname=Column{name='classname', type='TEXT', notNull=true, primaryKeyPosition=0}, datetime=Column{name='datetime', type='TEXT', notNull=true, primaryKeyPosition=0}, message=Column{name='message', type='TEXT', notNull=true, primaryKeyPosition=0}, id=Column{name='id', type='INTEGER', notNull=true, primaryKeyPosition=1}, logLevel=Column{name='logLevel', type='INTEGER', notNull=true, primaryKeyPosition=0}}, foreignKeys=[], indices=[]}
+     Found:
+    TableInfo{name='PWNLog', columns={classname=Column{name='classname', type='TEXT', notNull=true, primaryKeyPosition=0}, datetime=Column{name='datetime', type='TEXT', notNull=true, primaryKeyPosition=0}, message=Column{name='message', type='TEXT', notNull=true, primaryKeyPosition=0}, id=Column{name='id', type='INTEGER', notNull=true, primaryKeyPosition=1}, logLevel=Column{name='logLevel', type='TEXT', notNull=true, primaryKeyPosition=0}}, foreignKeys=[], indices=[]}
+     */
     static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             Log.d("SAMB", "Running database migration 2 -> 3");
             database.execSQL("CREATE TABLE if not exists \"pwnlog\"(\n" +
-                    "\t\"id\" Integer NOT NULL PRIMARY KEY AUTOINCREMENT,\n" +
-                    "\t\"logLevel\" Text NOT NULL,\n" +
-                    "\t\"classname\" Text NOT NULL,\n" +
-                    "\t\"message\" Text NOT NULL,\n" +
-                    "\t\"datetime\" Date NOT NULL );");
+                    "\t\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n" +
+                    "\t\"logLevel\" TEXT NOT NULL,\n" +
+                    "\t\"classname\" TEXT NOT NULL,\n" +
+                    "\t\"message\" TEXT NOT NULL,\n" +
+                    "\t\"datetime\" TEXT NOT NULL );");
         }
     };
 }
