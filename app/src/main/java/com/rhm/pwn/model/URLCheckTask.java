@@ -24,10 +24,13 @@ import io.reactivex.Completable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
 import java8.util.stream.StreamSupport;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.http.Header;
+
 import com.rhm.pwn.PWNApp;
 import com.rhm.pwn.R;
 import com.rhm.pwn.home.PWNHomeActivity;
@@ -145,6 +148,8 @@ public class URLCheckTask {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 PWNLog.log(URLCheckTask.class.getName(), "Got response");
+                PWNLog.log(URLCheckTask.class.getName(), "Headers:");
+                PWNLog.log(URLCheckTask.class.getName(), response.headers().toString());
                 Document doc = Jsoup.parse(response.body().toString());
                 PWNLog.log(URLCheckTask.class.getName(), "JSON Parsed");
                 Element tags = null;
@@ -213,6 +218,9 @@ public class URLCheckTask {
                 urlc.setLastChecked(Calendar.getInstance().getTime().toString());
                 urlc.setLastRunCode(URLCheck.CODE_RUN_FAILURE);
                 urlc.setLastRunMessage(t.getMessage());
+                if(!urlc.isHTTPS()) {
+                    urlc.setLastRunMessage(t.getMessage()+"\r\nTry setting URL to be https://");
+                }
                 //save urlc to db
                 Completable.fromAction(() -> {
                     PWNDatabase.getInstance(appContext).urlCheckDao().update(urlc);

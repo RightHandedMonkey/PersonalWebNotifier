@@ -25,7 +25,6 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
 
     private List<URLCheck> values;
     public URLCheckSelectedAction action;
-    private Resources resources;
     private ColorStateList defaultColors;
 
     // Provide a reference to the views for each data item
@@ -38,7 +37,6 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
         public TextView urlText;
         public TextView lastUpdateText;
         public ImageView notificationImage;
-//        public ImageView errorImage;
         public View layout;
 
         public ViewHolder(View v) {
@@ -80,16 +78,13 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
     // Create new views (invoked by the layout manager)
     @Override
     public URLCheckAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
-        resources = parent.getResources();
+                                                         int viewType) {
         // create a new view
-        LayoutInflater inflater = LayoutInflater.from(
-                parent.getContext());
-        View v =
-                inflater.inflate(R.layout.url_check_row, parent, false);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View v = inflater.inflate(R.layout.url_check_row, parent, false);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v);
-        defaultColors =  vh.lastUpdateText.getTextColors(); //save original colors
+        defaultColors = vh.lastUpdateText.getTextColors(); //save original colors
         return vh;
     }
 
@@ -99,19 +94,23 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         final URLCheck item = values.get(position);
+        if (item.isEnableNotifications()) {
+            holder.baseUrlText.setTextColor(Color.BLACK);
+        } else {
+            holder.baseUrlText.setTextColor(defaultColors);
+        }
         holder.baseUrlText.setText(item.getDisplayTitle());
         holder.urlText.setText(item.getDisplayBody());
+
         if (item.getLastRunCode() == URLCheck.CODE_RUN_FAILURE) {
             holder.lastUpdateText.setText(item.getLastRunMessage());
             holder.lastUpdateText.setTextColor(Color.RED);
-//            holder.errorImage.setVisibility(View.VISIBLE);
         } else {
             holder.lastUpdateText.setText(item.getLastUpdated());
             holder.lastUpdateText.setTextColor(defaultColors);
-//            holder.errorImage.setVisibility(View.GONE);
         }
-        holder.lastUpdateText.setVisibility(TextUtils.isEmpty(holder.lastUpdateText.getText())?View.GONE : View.VISIBLE);
-        holder.notificationImage.setVisibility(item.isHasBeenUpdated()?View.VISIBLE : View.GONE);
+        holder.lastUpdateText.setVisibility(TextUtils.isEmpty(holder.lastUpdateText.getText()) ? View.GONE : View.VISIBLE);
+        holder.notificationImage.setVisibility(item.isHasBeenUpdated() ? View.VISIBLE : View.GONE);
         holder.layout.setOnClickListener(v -> action.onSelectedURLCheck(item));
         holder.layout.setOnLongClickListener(view -> action.onEditURLCheck(item));
 

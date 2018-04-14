@@ -3,6 +3,7 @@ package com.rhm.pwn.model
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.content.Context
+import android.util.Log
 import com.google.android.gms.tasks.Tasks.await
 import com.rhm.pwn.utils.PWNUtils
 import io.reactivex.Completable
@@ -29,6 +30,10 @@ data class PWNLog @JvmOverloads constructor(
             val logItem = PWNLog(classname, message, logLevel[0].toString(), id, datetime)
 
             Completable.fromAction {
+                when (logLevel.toUpperCase()) {
+                    "E" -> Log.e("SAMB", "${classname} - ${message}")
+                    else -> Log.d("SAMB", "${classname} - ${message}")
+                }
                 PWNDatabase.getInstance(appContext).urlCheckDao().insertLog(logItem)
             }.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())

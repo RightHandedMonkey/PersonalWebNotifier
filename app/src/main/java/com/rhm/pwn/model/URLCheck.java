@@ -38,6 +38,14 @@ public class URLCheck implements Serializable{
         return urlValid;
     }
 
+    public boolean isHTTPS() {
+        boolean https = false;
+        if (isUrlValid()) {
+            https = url.toLowerCase().startsWith("https");
+        }
+        return https;
+    }
+
     public void setUrlValid(boolean urlValid) {
         this.urlValid = urlValid;
     }
@@ -82,6 +90,7 @@ public class URLCheck implements Serializable{
     }
 
     /*
+    SAMPLES
         url1.name = "A.N.N.E.";
         url1.url = "https://www.kickstarter.com/projects/1445624543/anne/posts";
         selector = ":nth-child(1) > .project_post_summary > .normal > .green-dark"
