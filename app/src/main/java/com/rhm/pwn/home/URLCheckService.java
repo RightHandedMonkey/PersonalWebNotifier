@@ -12,6 +12,7 @@ import java.util.List;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import com.rhm.pwn.model.PWNDatabase;
+import com.rhm.pwn.model.PWNLog;
 import com.rhm.pwn.model.URLCheck;
 import com.rhm.pwn.model.URLCheckTask;
 
@@ -37,14 +38,14 @@ public class URLCheckService extends Service {
         } else {
             restart = false;
         }
-        Log.d("SAMB", this.getClass().getName() + " - onStartCommand received");
+        PWNLog.log(this.getClass().getName() + " - onStartCommand received");
         //get list of enabled checks, if less than 1 then stopSelf
         Single<List<URLCheck>> single = Single.fromCallable(() -> PWNDatabase.getInstance(this.getApplicationContext()).urlCheckDao().getAllEnabled())
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io());
         single.subscribe((urlChecks, throwable) -> {
             if (urlChecks.size() < 1) {
-                Log.d("SAMB", this.getClass().getName() + " - No items to schedule checks for - stopSelf() called");
+                PWNLog.log(this.getClass().getName() + " - No items to schedule checks for - stopSelf() called");
                 stopSelf();
                 return;
             }
@@ -52,15 +53,15 @@ public class URLCheckService extends Service {
 
                 nextJobDelay = URLCheckTask.checkAll(urlChecks, this.getApplicationContext());
                 started = true;
-                Log.d("SAMB", this.getClass().getName() + " - Scheduling next job to happen in " + nextJobDelay + " secs");
+                PWNLog.log(this.getClass().getName(), "Scheduling next job to happen in " + nextJobDelay + " secs");
                 //check if service already running
                 URLCheckJobScheduler.scheduleJob(this.getApplicationContext(), (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE), nextJobDelay);
             } else {
-                Log.d("SAMB", this.getClass().getName() + " - No more jobs needed for scheduling");
+                PWNLog.log(this.getClass().getName() + " - No more jobs needed for scheduling");
             }
 
         });
-        Log.d("SAMB", this.getClass().getName() + " Service started");
+        PWNLog.log(this.getClass().getName() + " Service started");
         return Service.START_STICKY;
 
     }
