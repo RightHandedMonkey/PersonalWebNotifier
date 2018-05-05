@@ -18,10 +18,13 @@ import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
 import com.rhm.pwn.model.PWNDatabase;
+import com.rhm.pwn.model.PWNLog;
 import com.rhm.pwn.model.PWNTask;
 import com.rhm.pwn.model.URLCheck;
 import com.rhm.pwn.model.URLCheckTask;
 import com.rhm.pwn.utils.PWNUtils;
+
+import junit.framework.Assert;
 
 /**
  * Created by sambo on 9/4/17.
@@ -34,7 +37,7 @@ public class URLCheckJobScheduler extends JobService {
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         started = true;
-        Log.d("SAMB", this.getClass().getName() + " onStartJob() called");
+        PWNLog.log(URLCheckJobScheduler.class.getName(), "onStartJob() called - params: "+jobParameters.toString());
         Single<List<URLCheck>> single = Single.fromCallable(() -> PWNDatabase.getInstance(this.getApplicationContext()).urlCheckDao().getAllEnabled()
         )
                 .subscribeOn(Schedulers.io())
@@ -87,6 +90,7 @@ public class URLCheckJobScheduler extends JobService {
     @WorkerThread
     public static void scheduleJob(Context context, JobScheduler js, Long delayInSec) {
         js.cancelAll();
+        Assert.assertTrue(js.getAllPendingJobs().size() == 0);
         cleanOldTasks(context);
         ComponentName mServiceComponent = new ComponentName(context, URLCheckJobScheduler.class);
         long multiplierMS = 1000; //sec to milli
@@ -110,8 +114,7 @@ public class URLCheckJobScheduler extends JobService {
         extras.putLong(PWNTask.class.getName(), taskId);
         builder.setExtras(extras);
         js.schedule(builder.build());
-
-        Log.d("SAMB", URLCheckJobScheduler.class.getName() + " - Job queued to start as early as: " + PWNUtils.getFormattedDate(timeout.getTime()));
+        PWNLog.log(URLCheckJobScheduler.class.getName(), "Job queued to start as early as: " + PWNUtils.getFormattedDate(timeout.getTime()));
     }
 
     @Override

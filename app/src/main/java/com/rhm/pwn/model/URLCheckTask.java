@@ -52,9 +52,11 @@ public class URLCheckTask {
 
 
     public static boolean doesURLCheckRequireUpdate(URLCheck urlc, long curElapsedRealTime) {
-        if (curElapsedRealTime - urlc.getLastElapsedRealtime() > urlc.getCheckInterval() && !TextUtils.isEmpty(urlc.getBaseUrl())) {
+        if (!TextUtils.isEmpty(urlc.getBaseUrl()) && (curElapsedRealTime - urlc.getLastElapsedRealtime()) > urlc.getCheckInterval()*1000) {
+            PWNLog.log(URLCheckTask.class.getName(), "doesURLCheckRequireUpdate is TRUE: curElapsedRealTime="+curElapsedRealTime+" - urlc.getLastElapsedRealtime()="+urlc.getLastElapsedRealtime()+" > urlc.getCheckInterval()="+urlc.getCheckInterval());
             return true;
         }
+        PWNLog.log(URLCheckTask.class.getName(), "doesURLCheckRequireUpdate is FALSE");
         return false;
     }
 
@@ -70,11 +72,9 @@ public class URLCheckTask {
             PWNLog.log(URLCheckTask.class.getName(), "Update check for #" + num + ", " + urlCheck.getDisplayTitle());
             if (URLCheckTask.doesURLCheckRequireUpdate(urlCheck, curElapsedTime)) {
                 TOTAL++;
-                Log.d("SAMB", URLCheckTask.class.getName() + " - Queuing URLCheck for: " + urlCheck.getUrl());
                 PWNLog.log(URLCheckTask.class.getName(), "Scheduling check for #" + num);
                 URLCheckTask.handleURLCheckAction(urlCheck, appContext);
             } else {
-                Log.d("SAMB", URLCheckTask.class.getName() + " - Skipping URLCheck for: " + urlCheck.getUrl());
                 PWNLog.log(URLCheckTask.class.getName(), "Skipping check for #" + num);
             }
             num++;
