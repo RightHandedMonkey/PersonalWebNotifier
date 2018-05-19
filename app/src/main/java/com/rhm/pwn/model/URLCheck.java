@@ -6,6 +6,8 @@ import android.arch.persistence.room.PrimaryKey;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -152,11 +154,11 @@ public class URLCheck implements Serializable{
         this.id = id;
     }
 
-    public String getUrl() {
+    public @NotNull String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(@NotNull String url) {
         this.url = url;
         setBaseUrl(url);
     }
