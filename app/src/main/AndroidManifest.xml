@@ -38,10 +38,6 @@
             android:name=".home.URLCheckJobScheduler"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name=".home.URLCheckService"
-            android:enabled="true"
-            android:exported="false" />
 
         <receiver android:name=".home.BootCompleteReceiver">
             <intent-filter>

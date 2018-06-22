@@ -16,7 +16,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import com.rhm.pwn.home.URLCheckJobScheduler;
-import com.rhm.pwn.home.URLCheckService;
 import com.rhm.pwn.model.PWNDatabase;
 import com.rhm.pwn.model.PWNLog;
 import com.rhm.pwn.model.URLCheckChangeNotifier;
@@ -41,9 +40,7 @@ public class PWNApp extends Application implements Observer {
         PWNDatabase.getInstance(getApplicationContext());
         Log.d("SAMB", "Room Persistence Library Initialized.");
         //The service should only not be running on first start - this avoids duplicate calls to onStartCommand
-        if (!isURLCheckServiceRunning()) {
-            startService();
-        }
+        startService();
     }
 
     @Override
@@ -65,9 +62,9 @@ public class PWNApp extends Application implements Observer {
     }
 
     public void startService() {
-        Intent service = new Intent(getApplicationContext(), URLCheckService.class);
-        service.putExtra(URLCheckService.class.getName(), true);
-        getApplicationContext().startService(service);
+        if (!URLCheckJobScheduler.isStarted()) {
+            URLCheckJobScheduler.start(this);
+        }
     }
 
     public void registerNotifications() {
@@ -90,15 +87,5 @@ public class PWNApp extends Application implements Observer {
             mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
             mNotificationManager.createNotificationChannel(mChannel);
         }
-    }
-
-    private boolean isURLCheckServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (URLCheckService.class.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
     }
 }

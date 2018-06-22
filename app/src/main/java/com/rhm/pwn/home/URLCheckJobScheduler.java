@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
@@ -134,5 +135,15 @@ public class URLCheckJobScheduler extends JobService {
     public boolean onStopJob(JobParameters jobParameters) {
         Log.d("SAMB", this.getClass().getName() + " onStopJob() called");
         return true;
+    }
+
+    public static boolean isStarted() {
+        return started;
+    }
+
+    public static void start(Context context) {
+        Completable.fromAction(() -> URLCheckJobScheduler.scheduleJob(context, (JobScheduler) context.getApplicationContext().getSystemService(Context.JOB_SCHEDULER_SERVICE), 60l))
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 }
