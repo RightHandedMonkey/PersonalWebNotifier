@@ -97,9 +97,7 @@ public class URLCheckJobScheduler extends JobService {
         long multiplierMS = 1000; //sec to milli
         long minStartDelayDivisor = 10;
         long minStart = delayInSec - delayInSec / minStartDelayDivisor;
-        long maxStart = delayInSec + delayInSec / minStartDelayDivisor;
         long minLatency = Math.max(1000, minStart * multiplierMS);
-        long deadline = Math.max(15000, maxStart * multiplierMS);
         Calendar timeout = Calendar.getInstance();
         timeout.setTimeInMillis((new Date()).getTime() + minLatency);
 

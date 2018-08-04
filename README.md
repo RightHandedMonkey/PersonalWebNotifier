@@ -14,6 +14,12 @@ It illustrates using:
 * Boot Complete Receiver to continue checks after a reboot
 * RxJava2 Completables to replace ASyncTask
 
+Immediate goals:
+* Indeterminate loading indicator on webview page
+* Tooltip on webview page first load to indicate to click when page loads
+* Getting started dialog to show how the app works/what it is for
+* Start with sample with tooltip and have button to click to select CSS instead of requesting user to enter text
+
 Future goals:
 * Rewrite using MVP
 * Implement Dagger2

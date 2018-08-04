@@ -16,6 +16,7 @@ import java.util.List;
 import com.rhm.pwn.R;
 import com.rhm.pwn.model.URLCheck;
 import com.rhm.pwn.model.URLCheckSelectedAction;
+import com.rhm.pwn.utils.PWNUtils;
 
 /**
  * Created by sambo on 8/29/2017.
@@ -37,6 +38,7 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
         public TextView urlText;
         public TextView lastUpdateText;
         public ImageView notificationImage;
+        public TextView lastUpdateDate;
         public View layout;
 
         public ViewHolder(View v) {
@@ -46,7 +48,7 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
             urlText = v.findViewById(R.id.urlText);
             lastUpdateText = v.findViewById(R.id.lastUpdateText);
             notificationImage = v.findViewById(R.id.notificationImage);
-//            errorImage = v.findViewById(R.id.errorImage);
+            lastUpdateDate = v.findViewById(R.id.lastUpdateDate);
         }
     }
 
@@ -91,8 +93,6 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
         final URLCheck item = values.get(position);
         if (item.isEnableNotifications()) {
             holder.baseUrlText.setTextColor(Color.BLACK);
@@ -113,6 +113,13 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
         holder.notificationImage.setVisibility(item.isHasBeenUpdated() ? View.VISIBLE : View.GONE);
         holder.layout.setOnClickListener(v -> action.onSelectedURLCheck(item));
         holder.layout.setOnLongClickListener(view -> action.onEditURLCheck(item));
+        if (TextUtils.isEmpty(item.getLastChecked())) {
+            holder.lastUpdateDate.setVisibility(View.GONE);
+            holder.lastUpdateDate.setText("");
+        } else {
+            holder.lastUpdateDate.setVisibility(View.VISIBLE);
+            holder.lastUpdateDate.setText(item.getLastChecked());
+        }
 
     }
 
