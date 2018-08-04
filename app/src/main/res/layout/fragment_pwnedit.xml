@@ -15,11 +15,18 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="HTTP://"
+            android:hint="https://"
+            android:text="https://"
             android:inputType="textWebEmailAddress" />
 
     </android.support.design.widget.TextInputLayout>
 
+    <Button
+        android:id="@+id/selectCSSButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Item on Page"
+        />
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -29,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="CSS Selector"
+            android:hint="Or, Manually Enter CSS Selector"
             android:inputType="textPersonName"
             />
     </android.support.design.widget.TextInputLayout>

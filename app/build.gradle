@@ -24,8 +24,8 @@ android {
         applicationId "com.rhm.pwn"
         minSdkVersion 23
         targetSdkVersion 27
-        versionCode 13
-        versionName "1.0.7"
+        versionCode 14
+        versionName "1.0.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -82,4 +82,8 @@ dependencies {
         transitive = true
     }
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    //RxBinding support
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
+    implementation 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.1.1'
+    implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.1.1'
 }

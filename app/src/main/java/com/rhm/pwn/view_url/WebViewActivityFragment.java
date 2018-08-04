@@ -76,7 +76,7 @@ public class WebViewActivityFragment extends Fragment {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe((urlCheck, throwable) -> {
-                        Log.d("SAMB", "Loading url into webview in fragment");
+                        Log.d("SAMB", "Loading url '" + urlCheck.getUrl().toString() + "' into webview in fragment");
 
                         if (isAdded()) {
                             //since we are viewing it now, reset the setting
@@ -105,6 +105,7 @@ public class WebViewActivityFragment extends Fragment {
         WebSettings settings = wv.getSettings();
         settings.setJavaScriptEnabled(true);
         wv.setWebChromeClient(new WebChromeClient());
+
         wv.setWebViewClient(
                 new WebViewClient() {
                     @Override
@@ -124,34 +125,10 @@ public class WebViewActivityFragment extends Fragment {
 
                     @Override
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        Log.d("SAMB", this.getClass().getName() + " - shouldOverrideUrlLoading() where url: "+url.toString());
 
-                        boolean handled = true;
-
-                        if (null == url) {
-                            handled = false;
-                        }
-
-                        Exception exception = null;
-                        try {
-                            if (handled) {
-                                if (url.contains("http")) {
-                                    handled = true;
-                                } else {
-                                    handled = false;
-                                }
-                            }
-                        } catch (Exception e) {
-                            exception = e;
-                        }
-                        if (exception != null) {
-                            Log.e("SAMB", "shouldOverrideUrlLoading() failed, handled = " + handled + ", called for '" + url.toString() + "'");
-                            Log.e("SAMB", "Failure", exception);
-                        } else {
-                            Log.d("SAMB", "shouldOverrideUrlLoading() handled = " + handled + ", called for '" + url.toString() + "'");
-                        }
-                        return handled;
+                        return false;
                     }
-
                 });
         wv.addJavascriptInterface(new WebInterface(this.getContext(), interactions), "Android");
     }

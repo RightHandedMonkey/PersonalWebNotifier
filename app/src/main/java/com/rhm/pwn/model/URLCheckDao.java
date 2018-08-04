@@ -29,6 +29,9 @@ public interface URLCheckDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     List<Long> insertAll(URLCheck... urlChecks);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    Long insertCheck(URLCheck urlCheck);
+
     @Insert
     Long insertTask(PWNTask pwntask);
 

@@ -33,6 +33,8 @@ public class WebViewActivity extends AppCompatActivity implements PWNInteraction
     public boolean selectorActive = false;
     private URLCheck urlc=null;
 
+    public static final int HIGHLIGHT_ROW_FROM_CSS_SELECTOR=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
