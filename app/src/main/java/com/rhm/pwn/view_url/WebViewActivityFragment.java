@@ -1,6 +1,7 @@
 package com.rhm.pwn.view_url;
 
 import android.content.Context;
+import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -36,6 +38,7 @@ public class WebViewActivityFragment extends Fragment {
 
     public boolean enableSelector = false;
     private PWNInteractions interactions;
+    private ProgressBar progressBar;
 
     public WebViewActivityFragment() {
     }
@@ -68,6 +71,7 @@ public class WebViewActivityFragment extends Fragment {
 
         super.onViewCreated(view, savedInstanceState);
         WebView wv = view.findViewById(R.id.webView);
+        progressBar = view.findViewById(R.id.progressBar);
         configureWebView(wv);
         Integer id = (Integer) getActivity().getIntent().getSerializableExtra(URLCheck.class.getName());
         if (id != null && id > 0) {
@@ -119,6 +123,7 @@ public class WebViewActivityFragment extends Fragment {
                             if (interactions != null) {
                                 interactions.handlePageLoaded();
                             }
+                            updateLoadingIndicator(false);
                             Log.d("SAMB", this.getClass().getName() + " - Finished Loading page");
                         }
                     }
@@ -126,11 +131,21 @@ public class WebViewActivityFragment extends Fragment {
                     @Override
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
                         Log.d("SAMB", this.getClass().getName() + " - shouldOverrideUrlLoading() where url: "+url.toString());
-
+                        if (isAdded()) {
+                            updateLoadingIndicator(true);
+                        }
                         return false;
                     }
                 });
         wv.addJavascriptInterface(new WebInterface(this.getContext(), interactions), "Android");
     }
 
+    @MainThread
+    public void updateLoadingIndicator(boolean show) {
+        if (show) {
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+        }
+    }
 }

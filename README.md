@@ -15,7 +15,6 @@ It illustrates using:
 * RxJava2 Completables to replace ASyncTask
 
 Immediate goals:
-* Indeterminate loading indicator on webview page
 * Open sample check on page first load with tooltip to click on Select CSS button
 * Getting started dialog to show how the app works/what it is for
 * Start with sample with tooltip and have button to click to select CSS instead of requesting user to enter text
