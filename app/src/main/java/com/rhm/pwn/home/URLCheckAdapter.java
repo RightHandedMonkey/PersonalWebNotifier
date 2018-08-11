@@ -118,7 +118,7 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
             holder.lastUpdateDate.setText("");
         } else {
             holder.lastUpdateDate.setVisibility(View.VISIBLE);
-            holder.lastUpdateDate.setText(item.getLastChecked());
+            holder.lastUpdateDate.setText("Checked: "+ item.getLastChecked());
         }
 
     }

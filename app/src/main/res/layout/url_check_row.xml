@@ -17,11 +17,12 @@
             android:layout_height="wrap_content"
             android:layout_alignWithParentIfMissing="true"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintStart_toEndOf="@+id/notificationImage"
             app:layout_constraintTop_toTopOf="parent"
+            android:ellipsize="end"
             tools:text="This is a really long line of text that should not wrap around to the next line" />
 
         <ImageView
@@ -47,21 +48,29 @@
 
         <TextView
             android:id="@+id/lastUpdateText"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            tools:text="Last Update Text"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/urlText" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/urlText"
+            tools:text="Last Update Text" />
 
         <TextView
             android:id="@+id/lastUpdateDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="2018-01-01 00:00:00"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            />
+            android:layout_marginBottom="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lastUpdateText"
+            tools:text="2018-01-01 00:00:00" />
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>
