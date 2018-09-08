@@ -3,7 +3,9 @@ package com.rhm.pwn.utils;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import java.io.ByteArrayOutputStream;
@@ -70,5 +72,18 @@ public class PWNUtils {
             return null;
         }
         return byteArrayOutputStream.toString();
+    }
+
+    public static final String GETTING_STARTED_SHOWN="getting_started_shown";
+
+    public static boolean wasGettingStartedShown(Context appContext) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(appContext);
+        boolean wasShown = sharedPref.getBoolean(GETTING_STARTED_SHOWN, false);
+        return wasShown;
+    }
+
+    public static void setGettingStartedShown(Context appContext) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(appContext);
+        sharedPref.edit().putBoolean(GETTING_STARTED_SHOWN, true).apply();
     }
 }

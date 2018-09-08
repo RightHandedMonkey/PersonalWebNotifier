@@ -12,12 +12,18 @@ import android.view.MenuItem;
 import com.rhm.pwn.BuildConfig;
 import com.rhm.pwn.R;
 import com.rhm.pwn.debug.DebugActivity;
+import com.rhm.pwn.getting_started.GetStartedFragment;
+import com.rhm.pwn.utils.PWNUtils;
 
 public class PWNHomeActivity extends AppCompatActivity {
+    private static boolean gettingStartedChecked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!gettingStartedChecked) {
+            checkForGettingStarted();
+        }
 
         setContentView(R.layout.activity_pwnhome);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -29,6 +35,7 @@ public class PWNHomeActivity extends AppCompatActivity {
             DialogFragment dialog = new URLCheckDialog();
             dialog.show(getSupportFragmentManager(), URLCheckDialog.class.getName());
         });
+
     }
 
     @Override
@@ -61,4 +68,14 @@ public class PWNHomeActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void checkForGettingStarted() {
+        if (!PWNUtils.wasGettingStartedShown(this)) {
+            PWNUtils.setGettingStartedShown(this);
+            // Create and show the dialog.
+            GetStartedFragment.newInstance().show(getSupportFragmentManager(), GetStartedFragment.TAG);
+        }
+        gettingStartedChecked = true;
+    }
+
 }

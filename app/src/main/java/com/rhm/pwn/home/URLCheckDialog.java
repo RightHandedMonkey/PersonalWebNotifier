@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -28,6 +29,8 @@ import com.rhm.pwn.model.URLCheckInterval;
 import com.rhm.pwn.view_url.WebViewActivity;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Observable;
 
 /**
  * Created by sambo on 8/31/2017.
@@ -73,16 +76,26 @@ public class URLCheckDialog extends DialogFragment {
                     .observeOn(Schedulers.io())
                     .subscribeOn(AndroidSchedulers.mainThread())
                     .subscribe(() -> {
-                        int id = (int) onSaveClickedDbHelper(urlc, true);
-                        if (urlc.getId() > 0) {
-                            id = urlc.getId();
+                        if (urlc.isUrlValid()) {
+                            int id = (int) onSaveClickedDbHelper(urlc, true);
+                            if (urlc.getId() > 0) {
+                                id = urlc.getId();
+                            }
+                            Log.d("SAMB", this.getClass().getName() + ", onSelectCSSCheck() called for id#" + id);
+                            Intent i = new Intent(this.getContext(), WebViewActivity.class);
+                            i.putExtra(URLCheck.class.getName(), id);
+                            startActivityForResult(i, WebViewActivity.HIGHLIGHT_ROW_FROM_CSS_SELECTOR);
+                            Log.d("SAMB", this.getClass().getName() + ", onSelectedURLCheck() finished");
+                            dismiss();
+                        } else {
+                            Completable.fromAction(() -> {
+                                //This was not valid
+                                Toast.makeText(this.getContext(), "The URL provided does not appear valid. Please try again.", Toast.LENGTH_LONG);
+
+                            }).observeOn(AndroidSchedulers.mainThread())
+                                    .subscribeOn(AndroidSchedulers.mainThread())
+                                    .subscribe();
                         }
-                        Log.d("SAMB", this.getClass().getName() + ", onSelectCSSCheck() called for id#"+id);
-                        Intent i = new Intent(this.getContext(), WebViewActivity.class);
-                        i.putExtra(URLCheck.class.getName(), id);
-                        startActivityForResult(i, WebViewActivity.HIGHLIGHT_ROW_FROM_CSS_SELECTOR);
-                        Log.d("SAMB", this.getClass().getName() + ", onSelectedURLCheck() finished");
-                        dismiss();
                     });
         });
 
