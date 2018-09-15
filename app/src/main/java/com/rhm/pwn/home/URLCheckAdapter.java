@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,6 +40,8 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
         public TextView lastUpdateText;
         public ImageView notificationImage;
         public TextView lastUpdateDate;
+        public Button viewAction;
+        public Button editAction;
         public View layout;
 
         public ViewHolder(View v) {
@@ -49,6 +52,8 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
             lastUpdateText = v.findViewById(R.id.lastUpdateText);
             notificationImage = v.findViewById(R.id.notificationImage);
             lastUpdateDate = v.findViewById(R.id.lastUpdateDate);
+            viewAction = v.findViewById(R.id.view_button);
+            editAction = v.findViewById(R.id.edit_button);
         }
     }
 
@@ -120,6 +125,10 @@ public class URLCheckAdapter extends RecyclerView.Adapter<URLCheckAdapter.ViewHo
             holder.lastUpdateDate.setVisibility(View.VISIBLE);
             holder.lastUpdateDate.setText("Checked: "+ item.getLastChecked());
         }
+
+        //setup action buttons
+        holder.viewAction.setOnClickListener(v -> action.onSelectedURLCheck(item));
+        holder.editAction.setOnClickListener(v -> action.onEditURLCheck(item));
 
     }
 
