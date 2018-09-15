@@ -111,7 +111,7 @@ public class URLCheckTask {
                 //create notification
                 if (PWNUtils.isAppIsInBackground(appContext)) {
                     PWNLog.log(URLCheckTask.class.getName(), "App in the background, showing notifications");
-                    createNotifications(appContext, updated.get(0).title, shortMessage, longMessage, updated);
+                    createNotifications(appContext, getTitle(updated), shortMessage, longMessage, updated);
                 } else {
                     PWNLog.log(URLCheckTask.class.getName(), "App in the foreground, suppressing notifications");
                 }
@@ -264,11 +264,8 @@ public class URLCheckTask {
                         .setContentText(shortMsg)
                         .setChannelId(PWNApp.CHANNEL_ID)
                         .setAutoCancel(true);
-        NotificationCompat.InboxStyle inboxStyle =
-                new NotificationCompat.InboxStyle();
-        inboxStyle.setBigContentTitle("Pages have been updated");
-        StreamSupport.stream(Arrays.asList(longMsg.split("\n"))).forEach(s -> inboxStyle.addLine(s));
-        mBuilder.setStyle(inboxStyle);
+        mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(longMsg));
+        mBuilder.setContentText(shortMsg);
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(appContext, PWNHomeActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(appContext);
@@ -300,14 +297,23 @@ public class URLCheckTask {
     }
 
     static @NotNull String buildLongNotificationMessage(@NonNull List<URLCheck> list) {
-        String message = "";
+        String longText = "";
         for (int i = 0; i < list.size(); i++) {
-            message += getShortUpdateText(list.get(i).getDisplayTitle()) + "\n" + getLongUpdateText(list.get(i).getLastValue()) + "\n";
+            longText += getShortUpdateText(list.get(i).getDisplayTitle()) + "\n" + getLongUpdateText(list.get(i).getLastValue()) + "\n";
             if (i < list.size() - 1) {
-                message += "\n";
+                longText += "\n";
             }
         }
+        //subtract title from this message
+        String message = subtractText(longText, getTitle(list));
         return message.trim();
+    }
+
+    public static @NotNull String subtractText(String longText, String shortText) {
+        if(longText.startsWith(shortText)) {
+            return longText.substring(shortText.length());
+        }
+        return longText;
     }
 
     public static @NotNull String getShortUpdateText(@NotNull String text) {
@@ -322,6 +328,14 @@ public class URLCheckTask {
             return text.substring(0, LONG_MESSAGE_LEN - 1) + "…\n";
         }
         return text;
+    }
+
+    public static String getTitle(@NotNull List<URLCheck> list) {
+        String title="";
+        if (!list.isEmpty()) {
+            title = list.get(0).title;
+        }
+        return title;
     }
 
 }
