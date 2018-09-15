@@ -109,6 +109,15 @@ public class URLCheck implements Serializable{
         url3.url = "http://www.foxnews.com";
         selector = ".collection-spotlight > :nth-child(1) > .story-1 > .info > .info-header > .title > a"
 
+        url4.name = "Android Blog";
+        url4.url = "https://android-developers.googleblog.com/";
+
+        url5.name = "Netflix Tech Blog";
+        url5.url = "https://medium.com/netflix-techblog";
+
+        url6.name = "9to5 Google"
+        url6.url = "https://9to5google.com";
+        utl6.selector = ".trending-post-title:first-child";
      */
     private void setBaseUrl(String _url) {
         try {

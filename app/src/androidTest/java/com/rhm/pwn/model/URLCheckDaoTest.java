@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,9 +21,32 @@ import java.util.List;
 public class URLCheckDaoTest {
 
     private PWNDatabase db;
+    List<URLCheck> urls;
+    private static String LONG_MSG_SEED="Refunds: " +
+            "Are refunds available? " +
+            "For Monthly and Quarterly Subscriptions " +
+            "When cancelling a monthly or quarterly subscription, all future charges associated with your subscription will be cancelled. You may notify us of your intent to cancel at any time, however your cancellation will become effective at the end of your current billing period. You will not receive a refund; your subscription access and/or delivery and accompanying subscriber benefits will continue for the remainder of the current billing period. " +
+            "For Semi-Annual and Annual Subscriptions " +
+            "If you cancel a 6-month or annual subscription, your subscription and other subscriber benefits will end immediately upon your cancellation and you will receive a refund prorated to the effective date of your cancellation. If you cancel within the final 30 days of your subscription, the cancellation will not take effect until the end of your current billing period. You will not receive a refund; however your subscription access and/or delivery and accompanying subscriber benefits will continue for the remainder of the current billing period.";
+    private static String LONG= "http://cnn.com\n" +
+            "Refunds: Are refunds available? For Monthly and Quarterly Subscriptions When cancelling a monthly or quarterly subscription, all future charges associated with your subscription will be cancelled. You may notify us of your intent to cancel at any time, however your cancellation will become effective at the end of your current billing period. You will not receive a refund; your subscription access and/or delivery and accompanying subscriber benefits will continue for the remainder of the current billing period. For Semi-Annual and Annual Subscriptions If you cancel a 6-month or annual subscription, your subscription and other subscriber benefits will end immediately upon your cancellation and you will receive a refund prorated to the effective date of your c…\n" +
+            "\n" +
+            "\n" +
+            "http://cnn.com\n" +
+            "Refunds: Are refunds available? For Monthly and Quarterly Subscriptions When cancelling a monthly or quarterly subscription, all future charges associated with your subscription will be cancelled. You may notify us of your intent to cancel at any time, however your cancellation will become effective at the end of your current billing period. You will not receive a refund; your subscription access and/or delivery and accompanying subscriber benefits will continue for the remainder of the current billing period. For Semi-Annual and Annual Subscriptions If you cancel a 6-month or annual subscription, your subscription and other subscriber benefits will end immediately upon your cancellation and you will receive a refund prorated to the effective date of your c…";
+    private static String SHORT="Refunds: Are refunds available? For Monthly and Quarterly Subscriptions When cancelling a monthly or quarterly subscription, all future charges associated with your subscription will be cancelled. You may notify us of your intent to cancel at any time, however your cancellation will become effective at the end of your current billing period. You will not receive a refund; your subscription access and/or delivery and accompanying subscriber benefits will continue for the remainder of the current billing period. For Semi-Annual and Annual Subscriptions If you cancel a 6-month or annual subscription, your subscription and other subscriber benefits will end immediately upon your cancellation and you will receive a refund prorated to the effective date of your c…";
 
     @Before
     public void setUp() throws Exception {
+        urls = new ArrayList<>();
+        URLCheck urla = URLCheckGenerator.getSample(0);
+        urla.setLastValue(LONG_MSG_SEED);
+        URLCheck urlb = URLCheckGenerator.getSample(1);
+        urlb.setLastValue(LONG_MSG_SEED);
+
+        urls.add(urla);
+        urls.add(urlb);
+
         Context context = InstrumentationRegistry.getTargetContext();
         if (db == null) {
             db = PWNDatabase.getInstance(context);
@@ -33,7 +57,7 @@ public class URLCheckDaoTest {
 
     @After
     public void tearDown() throws Exception {
-
+        db.urlCheckDao().wipeTable();
     }
 
     @Test
@@ -45,7 +69,6 @@ public class URLCheckDaoTest {
         db.urlCheckDao().insertAll(urlc1, urlc2, urlc3);
         List<URLCheck> list = db.urlCheckDao().getAll();
         Assert.assertEquals(3, list.size());
-
     }
 
     @Test
@@ -120,6 +143,20 @@ public class URLCheckDaoTest {
         Assert.assertEquals(1, listUrlc.size());
         Assert.assertEquals(false, urlcRead.isEnableNotifications());
         Assert.assertEquals(false, urlcRead.isHasBeenUpdated());
+    }
+
+    @Test
+    public void getShortUpdateText() {
+        String str= URLCheckTask.buildShortNotificationMessage(urls);
+        Assert.assertEquals(SHORT, str);
+    }
+
+    @Test
+    public void getLongUpdateText() {
+        String shortStr= URLCheckTask.buildShortNotificationMessage(urls);
+        String longStr= URLCheckTask.buildLongNotificationMessage(urls);
+        Assert.assertTrue("The long message should be bigger than the short one, but was not", longStr.length() > shortStr.length());
+        Assert.assertEquals("The long string doesn't match the expected value", LONG, longStr);
     }
 
 }

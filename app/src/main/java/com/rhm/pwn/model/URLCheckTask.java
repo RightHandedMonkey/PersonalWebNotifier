@@ -10,6 +10,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -47,8 +48,8 @@ public class URLCheckTask {
     volatile static int SKIPPED = 0;
     static int TOTAL = 0;
 
-    public static final int MESSAGE_LEN = 36;
-    public static final int LONG_MESSAGE_LEN = 640;
+    public static final int MESSAGE_LEN = 768;
+    public static final int LONG_MESSAGE_LEN = 768;
 
 
     public static boolean doesURLCheckRequireUpdate(URLCheck urlc, long curElapsedRealTime) {
@@ -293,13 +294,12 @@ public class URLCheckTask {
                 .subscribe();
     }
 
-    private static String buildShortNotificationMessage(@NonNull List<URLCheck> list) {
-        String message = "";
-        message = list.get(0).getLastValue();
-        return message;
+    static @NotNull String buildShortNotificationMessage(@NonNull List<URLCheck> list) {
+        String message = getShortUpdateText(list.get(0).getLastValue())+"";
+        return message.trim();
     }
 
-    private static String buildLongNotificationMessage(@NonNull List<URLCheck> list) {
+    static @NotNull String buildLongNotificationMessage(@NonNull List<URLCheck> list) {
         String message = "";
         for (int i = 0; i < list.size(); i++) {
             message += getShortUpdateText(list.get(i).getDisplayTitle()) + "\n" + getLongUpdateText(list.get(i).getLastValue()) + "\n";
@@ -307,11 +307,11 @@ public class URLCheckTask {
                 message += "\n";
             }
         }
-        return message;
+        return message.trim();
     }
 
-    public static String getShortUpdateText(String text) {
-        if (text.length() > MESSAGE_LEN) {
+    public static @NotNull String getShortUpdateText(@NotNull String text) {
+        if (text != null && text.length() > MESSAGE_LEN) {
             return text.substring(0, MESSAGE_LEN - 1) + "…\n";
         }
         return text;
