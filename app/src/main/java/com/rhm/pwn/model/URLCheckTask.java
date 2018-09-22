@@ -111,7 +111,7 @@ public class URLCheckTask {
                 //create notification
                 if (PWNUtils.isAppIsInBackground(appContext)) {
                     PWNLog.log(URLCheckTask.class.getName(), "App in the background, showing notifications");
-                    createNotifications(appContext, getTitle(updated), shortMessage, longMessage, updated);
+                    createNotifications(appContext, updated);
                 } else {
                     PWNLog.log(URLCheckTask.class.getName(), "App in the foreground, suppressing notifications");
                 }
@@ -255,32 +255,36 @@ public class URLCheckTask {
         return headers.get("Last-Modified");
     }
 
-    public static void createNotifications(Context appContext, String title, String shortMsg, String longMsg, List<URLCheck> updatedItems) {
-        // The id of the channel.
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(appContext)
-                        .setSmallIcon(R.drawable.ic_stat_name)
-                        .setContentTitle(title)
-                        .setContentText(shortMsg)
-                        .setChannelId(PWNApp.CHANNEL_ID)
-                        .setAutoCancel(true);
-        mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(longMsg));
-        mBuilder.setContentText(shortMsg);
-        // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(appContext, PWNHomeActivity.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(appContext);
-        // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(PWNHomeActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager =
-                (NotificationManager) appContext.getSystemService(Context.NOTIFICATION_SERVICE);
+    public static void createNotifications(Context appContext, List<URLCheck> updatedItems) {
+        for (int index = 0; index < updatedItems.size(); index++) {
+            URLCheck urlc = updatedItems.get(index);
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(appContext, PWNApp.CHANNEL_ID)
+                            .setSmallIcon(R.drawable.ic_stat_name)
+                            .setContentTitle(urlc.title)
+                            .setContentText(urlc.getDisplayBody())
+                            .setAutoCancel(true);
+            mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(buildLongNotificationMessage(urlc)));
+            mBuilder.setContentText(urlc.getDisplayBody());
+            // Creates an explicit intent for an Activity in your app
+            Intent resultIntent = new Intent(appContext, PWNHomeActivity.class);
+            resultIntent.putExtra(URLCheck.class.getName(), urlc.getId());
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(appContext);
+            // Adds the back stack for the Intent (but not the Intent itself)
+            stackBuilder.addParentStack(PWNHomeActivity.class);
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            mBuilder.setContentIntent(resultPendingIntent);
+            NotificationManager mNotificationManager =
+                    (NotificationManager) appContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // mNotificationId is a unique integer your app uses to identify the
-        // notification. For example, to cancel the notification, you can pass its ID
-        // number to NotificationManager.cancel().
-        mNotificationManager.notify(1, mBuilder.build());
+            // mNotificationId is a unique integer your app uses to identify the
+            // notification. For example, to cancel the notification, you can pass its ID
+            // number to NotificationManager.cancel().
+            mNotificationManager.notify(urlc.getId(), mBuilder.build());
+            index++;
+        }
+
         Completable.fromAction(() -> {
             for (URLCheck urlc : updatedItems) {
                 urlc.setUpdateShown(true);
@@ -306,6 +310,14 @@ public class URLCheckTask {
         }
         //subtract title from this message
         String message = subtractText(longText, getTitle(list));
+        return message.trim();
+    }
+
+    static @NotNull String buildLongNotificationMessage(@NonNull URLCheck item) {
+        String longText = "";
+        longText += getShortUpdateText(item.getDisplayTitle()) + "\n" + getLongUpdateText(item.getLastValue()) + "\n";
+        //subtract title from this message
+        String message = subtractText(longText, item.getTitle());
         return message.trim();
     }
 

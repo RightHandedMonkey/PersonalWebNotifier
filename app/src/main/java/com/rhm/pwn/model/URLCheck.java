@@ -36,6 +36,9 @@ public class URLCheck implements Serializable{
     @Ignore
     private boolean urlValid = false;
 
+    @Ignore
+    private static int MAX_BODY_LEN = 768;
+
     public boolean isUrlValid() {
         return urlValid;
     }
@@ -254,7 +257,11 @@ public class URLCheck implements Serializable{
 
     public String getDisplayBody() {
         if (!TextUtils.isEmpty(lastValue)) {
-            return lastValue;
+            if (lastValue.length() > MAX_BODY_LEN) {
+                return (lastValue.substring(0, MAX_BODY_LEN - 1) + "…");
+            } else {
+                return lastValue;
+            }
         } else {
             return url;
         }

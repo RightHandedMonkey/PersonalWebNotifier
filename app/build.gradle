@@ -24,8 +24,8 @@ android {
         applicationId "com.rhm.pwn"
         minSdkVersion 23
         targetSdkVersion 27
-        versionCode 20
-        versionName "1.1.0"
+        versionCode 21
+        versionName "1.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -89,6 +89,8 @@ dependencies {
     implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.1.1'
     //Viewpager for getting started
     implementation 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
+
+    implementation 'com.android.support:customtabs:27.1.1'
 }
 
 apply plugin: 'kotlin-android-extensions'

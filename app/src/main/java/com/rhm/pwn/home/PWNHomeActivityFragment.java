@@ -1,8 +1,10 @@
 package com.rhm.pwn.home;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -43,11 +45,13 @@ public class PWNHomeActivityFragment extends Fragment implements Observer {
     URLCheckSelectedAction urlCheckAction = new URLCheckSelectedAction() {
         @Override
         public void onSelectedURLCheck(URLCheck urlc) {
-            Log.d("SAMB", this.getClass().getName() + ", onSelectedURLCheck() called");
-            Intent i = new Intent(PWNHomeActivityFragment.this.getContext(), WebViewActivity.class);
-            i.putExtra(URLCheck.class.getName(), urlc.getId());
-            startActivity(i);
-            Log.d("SAMB", this.getClass().getName() + ", onSelectedURLCheck() finished");
+            if (isAdded()) {
+                Log.d("SAMB", this.getClass().getName() + ", onSelectedURLCheck() called");
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                CustomTabsIntent customTabsIntent = builder.build();
+                customTabsIntent.launchUrl(PWNHomeActivityFragment.this.getActivity(), Uri.parse(urlc.getUrl()));
+                Log.d("SAMB", this.getClass().getName() + ", onSelectedURLCheck() finished");
+            }
         }
 
         @Override
