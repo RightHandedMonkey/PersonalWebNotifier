@@ -1,11 +1,14 @@
 package com.rhm.pwn.home;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,6 +16,7 @@ import com.rhm.pwn.BuildConfig;
 import com.rhm.pwn.R;
 import com.rhm.pwn.debug.DebugActivity;
 import com.rhm.pwn.getting_started.GetStartedFragment;
+import com.rhm.pwn.model.URLCheck;
 import com.rhm.pwn.utils.PWNUtils;
 
 public class PWNHomeActivity extends AppCompatActivity {
@@ -36,6 +40,20 @@ public class PWNHomeActivity extends AppCompatActivity {
             dialog.show(getSupportFragmentManager(), URLCheckDialog.class.getName());
         });
 
+        checkForDeepLink();
+    }
+
+    private void checkForDeepLink() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            int value = extras.getInt(URLCheck.class.getName(), -1);
+            String url = extras.getString(URLCheck.URL, "");
+            if (value > 0 && !TextUtils.isEmpty(url)) {
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                CustomTabsIntent customTabsIntent = builder.build();
+                customTabsIntent.launchUrl(this, Uri.parse(url));
+            }
+        }
     }
 
     @Override

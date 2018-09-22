@@ -9,6 +9,7 @@ import android.util.Log;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.io.StringBufferInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -38,6 +39,9 @@ public class URLCheck implements Serializable{
 
     @Ignore
     private static int MAX_BODY_LEN = 768;
+
+    @Ignore
+    public static String URL = "url";
 
     public boolean isUrlValid() {
         return urlValid;

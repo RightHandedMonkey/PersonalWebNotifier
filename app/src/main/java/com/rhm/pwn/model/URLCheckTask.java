@@ -269,6 +269,7 @@ public class URLCheckTask {
             // Creates an explicit intent for an Activity in your app
             Intent resultIntent = new Intent(appContext, PWNHomeActivity.class);
             resultIntent.putExtra(URLCheck.class.getName(), urlc.getId());
+            resultIntent.putExtra(URLCheck.URL, urlc.getUrl());
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(appContext);
             // Adds the back stack for the Intent (but not the Intent itself)
             stackBuilder.addParentStack(PWNHomeActivity.class);
