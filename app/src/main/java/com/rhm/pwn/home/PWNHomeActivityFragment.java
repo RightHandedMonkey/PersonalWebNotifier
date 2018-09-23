@@ -50,6 +50,13 @@ public class PWNHomeActivityFragment extends Fragment implements Observer {
                 CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                 CustomTabsIntent customTabsIntent = builder.build();
                 customTabsIntent.launchUrl(PWNHomeActivityFragment.this.getActivity(), Uri.parse(urlc.getUrl()));
+                Completable.fromAction(() -> {
+                            urlc.setHasBeenUpdated(false);
+                            PWNDatabase.getInstance(PWNHomeActivityFragment.this.getContext()).urlCheckDao().update(urlc);
+                        }
+                ).subscribeOn(Schedulers.io())
+                        .subscribe(() ->
+                                URLCheckChangeNotifier.getNotifier().update(true));
                 Log.d("SAMB", this.getClass().getName() + ", onSelectedURLCheck() finished");
             }
         }

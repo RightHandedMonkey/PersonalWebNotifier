@@ -16,8 +16,13 @@ import com.rhm.pwn.BuildConfig;
 import com.rhm.pwn.R;
 import com.rhm.pwn.debug.DebugActivity;
 import com.rhm.pwn.getting_started.GetStartedFragment;
+import com.rhm.pwn.model.PWNDatabase;
 import com.rhm.pwn.model.URLCheck;
+import com.rhm.pwn.model.URLCheckChangeNotifier;
 import com.rhm.pwn.utils.PWNUtils;
+
+import io.reactivex.Completable;
+import io.reactivex.schedulers.Schedulers;
 
 public class PWNHomeActivity extends AppCompatActivity {
     private static boolean gettingStartedChecked = false;
@@ -52,6 +57,16 @@ public class PWNHomeActivity extends AppCompatActivity {
                 CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                 CustomTabsIntent customTabsIntent = builder.build();
                 customTabsIntent.launchUrl(this, Uri.parse(url));
+                Completable.fromAction(() -> {
+                            URLCheck urlc = PWNDatabase.getInstance(this).urlCheckDao().get(value);
+                            urlc.setHasBeenUpdated(false);
+                            PWNDatabase.getInstance(this).urlCheckDao().update(urlc);
+                        }
+                ).subscribeOn(Schedulers.io())
+                        .subscribe(() ->
+                            URLCheckChangeNotifier.getNotifier().update(true)
+                        );
+
             }
         }
     }
