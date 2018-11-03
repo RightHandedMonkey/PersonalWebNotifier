@@ -24,8 +24,8 @@ android {
         applicationId "com.rhm.pwn"
         minSdkVersion 23
         targetSdkVersion 27
-        versionCode 22
-        versionName "1.2.1"
+        versionCode 23
+        versionName "1.2.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
