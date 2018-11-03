@@ -47,7 +47,7 @@
             app:layout_constraintTop_toBottomOf="@+id/baseUrlText" />
 
         <TextView
-            android:id="@+id/lastUpdateText"
+            android:id="@+id/lastUpdatedText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -68,8 +68,20 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textStyle="italic"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lastUpdateText"
-            tools:text="2018-01-01 00:00:00" />
+            app:layout_constraintTop_toBottomOf="@+id/lastUpdatedText"
+            tools:text="Updated: Last Update Date" />
+
+        <TextView
+            android:id="@+id/lastCheckedDate"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textStyle="italic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lastUpdateDate"
+            tools:text="Checked: Last Check Date" />
 
         <Button
             android:id="@+id/view_button"
@@ -83,7 +95,7 @@
             android:paddingRight="0dp"
             android:text="View"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lastUpdateDate" />
+            app:layout_constraintTop_toBottomOf="@+id/lastCheckedDate" />
 
         <Button
             android:id="@+id/edit_button"
@@ -96,7 +108,7 @@
             android:gravity="center_vertical|center"
             android:text="Edit"
             app:layout_constraintStart_toEndOf="@+id/view_button"
-            app:layout_constraintTop_toBottomOf="@+id/lastUpdateDate" />
+            app:layout_constraintTop_toBottomOf="@+id/lastCheckedDate" />
 
     </android.support.constraint.ConstraintLayout>
 

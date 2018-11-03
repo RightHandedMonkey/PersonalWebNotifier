@@ -7,6 +7,7 @@ import android.app.job.JobService;
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.PersistableBundle;
+import android.support.annotation.MainThread;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 
@@ -36,6 +37,7 @@ public class URLCheckJobScheduler extends JobService {
     static volatile boolean started = false;
 
     @Override
+    @MainThread
     public boolean onStartJob(JobParameters jobParameters) {
         started = true;
         PWNLog.log(URLCheckJobScheduler.class.getName(), "onStartJob() called - params: "+jobParameters.toString());
@@ -107,13 +109,20 @@ public class URLCheckJobScheduler extends JobService {
         JobInfo.Builder builder = new JobInfo.Builder((int) taskId, mServiceComponent);
         builder.setMinimumLatency(minLatency); // wait - at least 1 second
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
-        builder.setRequiresCharging(false); // we don't care if the device is charging or no
+        //run no matter after 1.25 times the min latency so at least it reschedules the job
+        builder.setOverrideDeadline(minLatency+minLatency*1/4);
+        builder.setRequiresCharging(false); // we don't care if the device is charging or not
         builder.setRequiresDeviceIdle(false);
         PersistableBundle extras = new PersistableBundle();
         extras.putLong(PWNTask.class.getName(), taskId);
         builder.setExtras(extras);
-        js.schedule(builder.build());
-        PWNLog.log(URLCheckJobScheduler.class.getName(), "Job queued to start as early as: " + PWNUtils.getFormattedDate(timeout.getTime()));
+
+        int jobSceduledResult = js.schedule(builder.build());
+        if (jobSceduledResult == JobScheduler.RESULT_FAILURE) {
+            PWNLog.log(URLCheckJobScheduler.class.getName(), "Job could not be queued to start", "E");
+        } else {
+            PWNLog.log(URLCheckJobScheduler.class.getName(), "Job queued to start as early as: " + PWNUtils.getFormattedDate(timeout.getTime()));
+        }
     }
 
     @Override

@@ -40,10 +40,6 @@ public class PWNTask {
 
     @Override
     public String toString() {
-//        Long minLatS = minLatency/1000;
-//        String minLatHuman = String.format("%d:%d:%02d", minLatS/60/60, minLatS/60, minLatS%60);
-//        Long deadlineS = overrideDeadline/1000;
-//        String deadlineHuman = String.format("%d:%d:%02d", deadlineS/60/60, deadlineS/60, deadlineS%60);
         String msg = String.format("Id#%d \r\ncreated:%s \n" +
                 "sched min:%s \r\nactual:%s", id, createJobTime, scheduledExecutionMinTime, actualExecutionTime);
         return msg;

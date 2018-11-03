@@ -53,7 +53,7 @@ public class PWNApp extends Application implements Observer {
     @Override
     public void update(Observable observable, Object o) {
         if (observable instanceof URLCheckChangeNotifier) {
-            if (o instanceof  Boolean && (Boolean)((Boolean) o).booleanValue()) {
+            if (o instanceof  Boolean && ((Boolean) o).booleanValue()) {
                 startService();
             }
         } else {

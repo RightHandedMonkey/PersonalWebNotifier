@@ -10,6 +10,12 @@ import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.rhm.pwn.PWNApp;
+import com.rhm.pwn.R;
+import com.rhm.pwn.home.PWNHomeActivity;
+import com.rhm.pwn.network.PWNRetroFitConnector;
+import com.rhm.pwn.utils.PWNUtils;
+
 import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,7 +23,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Selector;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -26,18 +31,10 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
 import java8.util.stream.StreamSupport;
 import okhttp3.Headers;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.http.Header;
-
-import com.rhm.pwn.PWNApp;
-import com.rhm.pwn.R;
-import com.rhm.pwn.home.PWNHomeActivity;
-import com.rhm.pwn.network.PWNRetroFitConnector;
-import com.rhm.pwn.utils.PWNUtils;
 
 /**
  * Created by sambo on 9/3/2017.
@@ -152,7 +149,7 @@ public class URLCheckTask {
                 PWNLog.log(URLCheckTask.class.getName(), "Got response");
                 PWNLog.log(URLCheckTask.class.getName(), "Headers:");
                 PWNLog.log(URLCheckTask.class.getName(), response.headers().toString());
-                Document doc = Jsoup.parse(response.body().toString());
+                Document doc = Jsoup.parse(response.body());
                 PWNLog.log(URLCheckTask.class.getName(), "JSON Parsed");
                 Element tags = null;
                 try {
@@ -180,13 +177,15 @@ public class URLCheckTask {
                     urlc.setLastRunCode(URLCheck.CODE_RUN_FAILURE);
                     urlc.setLastRunMessage("CSS selector must not be empty. Please correct and retry.");
                 }
-                urlc.setLastChecked(Calendar.getInstance().getTime().toString());
+                String curDate = Calendar.getInstance().getTime().toString();
+                urlc.setLastChecked(curDate);
                 if (tags != null) {
                     PWNLog.log(URLCheckTask.class.getName(), "CSS result tag was ok");
                     //the content has changed from the last time
-                    if (!urlc.lastValue.equals(tags.text())) {
+                    if (!urlc.getLastValue().equals(tags.text())) {
                         urlc.setHasBeenUpdated(true);
                         urlc.setUpdateShown(false);
+                        urlc.setLastUpdated(curDate);
                     }
                     urlc.setLastValue(tags.text());
                     urlc.setLastRunCode(URLCheck.CODE_RUN_SUCCESSFUL);
@@ -198,9 +197,10 @@ public class URLCheckTask {
                     if (!TextUtils.isEmpty(getLastModifiedDate(response.headers()))) {
                         PWNLog.log(URLCheckTask.class.getName(), "CSS result not available, checking via Last-Modified header");
                         //the content has changed from the last time
-                        if (urlc.lastValue == null || !urlc.lastValue.equals(getLastModifiedDate(response.headers()))) {
+                        if (urlc.getLastValue() == null || !urlc.getLastValue().equals(getLastModifiedDate(response.headers()))) {
                             urlc.setHasBeenUpdated(true);
                             urlc.setUpdateShown(false);
+                            urlc.setLastUpdated(curDate);
                         }
                         urlc.setLastValue(getLastModifiedDate(response.headers()));
                         urlc.setLastRunCode(URLCheck.CODE_RUN_SUCCESSFUL);
@@ -261,7 +261,7 @@ public class URLCheckTask {
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(appContext, PWNApp.CHANNEL_ID)
                             .setSmallIcon(R.drawable.ic_stat_name)
-                            .setContentTitle(urlc.title)
+                            .setContentTitle(urlc.getTitle())
                             .setContentText(urlc.getDisplayBody())
                             .setAutoCancel(true);
             mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(buildLongNotificationMessage(urlc)));
@@ -346,7 +346,7 @@ public class URLCheckTask {
     public static String getTitle(@NotNull List<URLCheck> list) {
         String title="";
         if (!list.isEmpty()) {
-            title = list.get(0).title;
+            title = list.get(0).getTitle();
         }
         return title;
     }
