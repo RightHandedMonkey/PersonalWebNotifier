@@ -84,6 +84,7 @@ class URLCheckAdapter// Provide a suitable constructor (depends on the kind of d
         holder.notificationImage.visibility = if (item.hasBeenUpdated) View.VISIBLE else View.GONE
         holder.layout.setOnClickListener { action.onSelectedURLCheck(item) }
         holder.layout.setOnLongClickListener { action.onEditURLCheck(item) }
+
         if (TextUtils.isEmpty(item.lastUpdated)) {
             holder.lastUpdateDate.visibility = View.GONE
             holder.lastUpdateDate.text = ""
@@ -91,7 +92,7 @@ class URLCheckAdapter// Provide a suitable constructor (depends on the kind of d
             holder.lastUpdateDate.visibility = View.VISIBLE
             holder.lastUpdateDate.text = "Updated: " + item.lastUpdated
         }
-        //Don't show checked if it is missing or the same as updated
+        //Don't show checked date if it is missing or the same as updated
         if (TextUtils.isEmpty(item.lastChecked) || item.lastChecked.equals(item.lastUpdated)) {
             holder.lastCheckedDate.visibility = View.GONE
             holder.lastCheckedDate.text = ""

@@ -102,9 +102,6 @@ public class URLCheckTask {
                     });
             if (updated != null && updated.size() > 0) {
                 PWNLog.log(URLCheckTask.class.getName(), "Some urls updated, prepare to show notifications for #" + updated.size());
-                //Set the notifications
-                String shortMessage = buildShortNotificationMessage(updated);
-                String longMessage = buildLongNotificationMessage(updated);
                 //create notification
                 if (PWNUtils.isAppIsInBackground(appContext)) {
                     PWNLog.log(URLCheckTask.class.getName(), "App in the background, showing notifications");
@@ -112,9 +109,6 @@ public class URLCheckTask {
                 } else {
                     PWNLog.log(URLCheckTask.class.getName(), "App in the foreground, suppressing notifications");
                 }
-                //create system badge
-            } else {
-
             }
         }).subscribeOn(Schedulers.io())
                 .subscribe();

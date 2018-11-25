@@ -2,49 +2,79 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp"
+    >
 
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/urlEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="https://"
-            android:text="https://"
-            android:inputType="textWebEmailAddress" />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <Button
-        android:id="@+id/selectCSSButton"
+    <TextView
+        style="@style/Base.TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select Item on Page"
-        />
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:text="1. Select Page" />
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/cssEditText"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Or, Manually Enter CSS Selector"
-            android:inputType="textPersonName"
-            />
-    </android.support.design.widget.TextInputLayout>
+            android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/urlEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="https://"
+                    android:inputType="textWebEmailAddress" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+    <TextView
+        style="@style/Base.TextAppearance.AppCompat.Large"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2. Select Item on Page (Optional)" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/cssEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="CSS Selector"
+                    android:inputType="textPersonName" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/selectCSSButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="Select Item on Page" />
+        </LinearLayout>
 
     <Spinner
         android:id="@+id/checkIntervalSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        />
 
     <TextView
         android:id="@+id/lastUpdatedTextView"
@@ -73,4 +103,6 @@
         android:layout_height="wrap_content"
         android:checked="true"
         android:text="Notify on new content" />
+
+
 </LinearLayout>
