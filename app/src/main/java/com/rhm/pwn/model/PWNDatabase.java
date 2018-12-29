@@ -11,7 +11,6 @@ import android.util.Log;
 /**
  * Created by sambo on 8/28/2017.
  */
-
 @Database(entities = {URLCheck.class, PWNTask.class, PWNLog.class}, version = 3)
 public abstract class PWNDatabase extends RoomDatabase {
     public abstract URLCheckDao urlCheckDao();
@@ -36,11 +35,7 @@ public abstract class PWNDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE pwntask ADD COLUMN scheduledExecutionMinTime TEXT");
         }
     };
-    /*
-    TableInfo{name='PWNLog', columns={classname=Column{name='classname', type='TEXT', notNull=true, primaryKeyPosition=0}, datetime=Column{name='datetime', type='TEXT', notNull=true, primaryKeyPosition=0}, message=Column{name='message', type='TEXT', notNull=true, primaryKeyPosition=0}, id=Column{name='id', type='INTEGER', notNull=true, primaryKeyPosition=1}, logLevel=Column{name='logLevel', type='INTEGER', notNull=true, primaryKeyPosition=0}}, foreignKeys=[], indices=[]}
-     Found:
-    TableInfo{name='PWNLog', columns={classname=Column{name='classname', type='TEXT', notNull=true, primaryKeyPosition=0}, datetime=Column{name='datetime', type='TEXT', notNull=true, primaryKeyPosition=0}, message=Column{name='message', type='TEXT', notNull=true, primaryKeyPosition=0}, id=Column{name='id', type='INTEGER', notNull=true, primaryKeyPosition=1}, logLevel=Column{name='logLevel', type='TEXT', notNull=true, primaryKeyPosition=0}}, foreignKeys=[], indices=[]}
-     */
+
     static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {

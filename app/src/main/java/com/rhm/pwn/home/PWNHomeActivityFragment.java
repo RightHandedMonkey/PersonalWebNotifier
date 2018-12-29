@@ -33,7 +33,6 @@ import com.rhm.pwn.model.PWNDatabase;
 import com.rhm.pwn.model.URLCheck;
 import com.rhm.pwn.model.URLCheckChangeNotifier;
 import com.rhm.pwn.model.URLCheckSelectedAction;
-import com.rhm.pwn.view_url.WebViewActivity;
 
 /**
  * A placeholder fragment containing a simple view.

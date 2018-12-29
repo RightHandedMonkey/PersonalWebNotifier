@@ -30,8 +30,6 @@ import com.rhm.pwn.view_url.WebViewActivity;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Observable;
-
 /**
  * Created by sambo on 8/31/2017.
  */
