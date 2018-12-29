@@ -77,6 +77,8 @@ public class URLCheckDaoTest {
         URLCheck urlc2 = URLCheckGenerator.getSample(2);
         List<Long> list = db.urlCheckDao().insertAll(urlc1, urlc2);
         URLCheck urlc = db.urlCheckDao().get(list.get(0).intValue());
+        urlc1.setId(urlc.getId());
+        urlc2.setId(urlc.getId());
         Assert.assertEquals(urlc1, urlc);
         Assert.assertFalse(urlc2.equals(urlc));
     }
@@ -90,6 +92,9 @@ public class URLCheckDaoTest {
         URLCheck urlcRead1 = db.urlCheckDao().get(list.get(0).intValue());
         URLCheck urlcRead2 = db.urlCheckDao().get(list.get(1).intValue());
         URLCheck urlcRead3 = db.urlCheckDao().get(list.get(2).intValue());
+        urlc1.setId(urlcRead1.getId());
+        urlc2.setId(urlcRead2.getId());
+        urlc3.setId(urlcRead3.getId());
         Assert.assertEquals(urlc1, urlcRead1);
         Assert.assertFalse(urlc1.equals(urlcRead2));
         Assert.assertFalse(urlc1.equals(urlcRead3));
@@ -143,20 +148,6 @@ public class URLCheckDaoTest {
         Assert.assertEquals(1, listUrlc.size());
         Assert.assertEquals(false, urlcRead.isEnableNotifications());
         Assert.assertEquals(false, urlcRead.isHasBeenUpdated());
-    }
-
-    @Test
-    public void getShortUpdateText() {
-        String str= URLCheckTask.buildShortNotificationMessage(urls);
-        Assert.assertEquals(SHORT, str);
-    }
-
-    @Test
-    public void getLongUpdateText() {
-        String shortStr= URLCheckTask.buildShortNotificationMessage(urls);
-        String longStr= URLCheckTask.buildLongNotificationMessage(urls);
-        Assert.assertTrue("The long message should be bigger than the short one, but was not", longStr.length() > shortStr.length());
-        Assert.assertEquals("The long string doesn't match the expected value", LONG, longStr);
     }
 
 }

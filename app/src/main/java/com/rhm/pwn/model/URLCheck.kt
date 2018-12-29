@@ -5,9 +5,7 @@ import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.text.TextUtils
 import android.util.Log
-
 import java.io.Serializable
-import java.io.StringBufferInputStream
 import java.net.MalformedURLException
 import java.net.URL
 
@@ -99,12 +97,12 @@ data class URLCheck(
         @Ignore @JvmField
         var URL = "url"
 
-        @Ignore @JvmField
-        val CODE_NOT_RUN = -1
-        @Ignore @JvmField
-        val CODE_RUN_SUCCESSFUL = 0
-        @Ignore @JvmField
-        val CODE_RUN_FAILURE = 1
+        @Ignore
+        const val CODE_NOT_RUN = -1
+        @Ignore
+        const val CODE_RUN_SUCCESSFUL = 0
+        @Ignore
+        const val CODE_RUN_FAILURE = 1
     }
 
 }

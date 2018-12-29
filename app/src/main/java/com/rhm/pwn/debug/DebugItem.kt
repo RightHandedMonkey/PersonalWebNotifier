@@ -19,6 +19,7 @@ data class DebugItem(val dateStr: String = "") {
     }
 
     companion object {
+        @JvmStatic
         fun parseLogs(logs: List<PWNLog>): List<DebugItem> {
             val list = ArrayList<com.rhm.pwn.debug.DebugItem>()
             for (entry in logs.groupBy { it.datetime.substring(0..15) }) {

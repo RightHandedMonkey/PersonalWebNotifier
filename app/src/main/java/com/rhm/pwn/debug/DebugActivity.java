@@ -40,7 +40,7 @@ public class DebugActivity extends AppCompatActivity {
                             .urlCheckDao().getTasks();
                     logList = PWNDatabase.getInstance(DebugActivity.this)
                             .urlCheckDao().getLogsDescending();
-                    parsedLogs = DebugItem.Companion.parseLogs(logList);
+                    parsedLogs = DebugItem.parseLogs(logList);
 
                 }
         ).observeOn(AndroidSchedulers.mainThread())
