@@ -54,13 +54,8 @@ public class PWNHomeActivityFragment extends Fragment implements Observer {
                 Log.d("SAMB", this.getClass().getName() + ", onSelectedURLCheck() called");
                 CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                 Intent selectAction = new Intent(PWNHomeActivityFragment.this.getActivity(), PWNHomeActivity.class);
-                //TODO: Handle case for using customTab to choose URLs
-                //selectAction.putExtra(URLCheck.class.getName(), urlc.getId());
-                //selectAction.putExtra(ACTION, ACTION_EDIT);
-                //retrieve URL using intent.getDataString() to see which URL was in the browser when selected
                 PendingIntent pi = PendingIntent.getActivity(PWNHomeActivityFragment.this.getActivity(), 0, selectAction, 0);
                 Bitmap selectIcon = BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_input_get);
-                //builder.setActionButton(selectIcon,"Select Page", pi, true);
                 CustomTabsIntent customTabsIntent = builder.build();
                 customTabsIntent.launchUrl(PWNHomeActivityFragment.this.getActivity(), Uri.parse(urlc.getUrl()));
                 Completable.fromAction(() -> {
