@@ -1,21 +1,18 @@
 package com.rhm.pwn.home_feature
 
-import com.rhm.pwn.home_feature.HomeFeature.State
-import com.rhm.pwn.home_feature.HomeFeature.Wish
-import com.rhm.pwn.home_feature.HomeFeature.Wish.*
-import com.rhm.pwn.home_feature.HomeFeature.Effect
-import com.rhm.pwn.home_feature.HomeFeature.Effect.*
 import com.badoo.mvicore.element.Actor
 import com.badoo.mvicore.element.Reducer
 import com.badoo.mvicore.feature.ActorReducerFeature
-import com.badoo.mvicore.feature.ReducerFeature
+import com.rhm.pwn.home_feature.HomeFeatureOld.Wish
+import com.rhm.pwn.home_feature.HomeFeatureOld.Effect
+import com.rhm.pwn.home_feature.HomeFeatureOld.State
 import com.rhm.pwn.model.URLCheck
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-class HomeFeature(getListService: Observable<List<URLCheck>>) : ActorReducerFeature<Wish, Effect, State, Nothing>(
+class HomeFeatureOld : ActorReducerFeature<Wish, Effect, State, Nothing>(
         initialState = State(),
-        actor = ActorImpl(getListService),
+        actor = ActorImpl(),
         reducer = ReducerImpl()
 ) {
 
@@ -42,7 +39,9 @@ class HomeFeature(getListService: Observable<List<URLCheck>>) : ActorReducerFeat
         data class FinishedWithFailure(val throwable: Throwable) : Effect()
     }
 
-    class ActorImpl(val service: Observable<List<URLCheck>>) : Actor<State, Wish, Effect> {
+    class ActorImpl : Actor<State, Wish, Effect> {
+        private val service: Observable<List<URLCheck>> = TODO()
+
         override fun invoke(state: State, wish: Wish): Observable<Effect> = when (wish) {
             is Wish.HomeScreenLoading -> {
                 if (!state.isLoading) {
@@ -73,4 +72,5 @@ class HomeFeature(getListService: Observable<List<URLCheck>>) : ActorReducerFeat
             )
         }
     }
+
 }

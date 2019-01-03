@@ -26,7 +26,7 @@ import com.rhm.pwn.model.URLCheck;
 import com.rhm.pwn.model.URLCheckTask;
 import com.rhm.pwn.utils.PWNUtils;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /**
  * Created by sambo on 9/4/17.
