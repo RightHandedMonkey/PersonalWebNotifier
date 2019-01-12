@@ -5,8 +5,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.TaskStackBuilder
+import androidx.core.app.NotificationCompat
+import androidx.core.app.TaskStackBuilder
 import android.text.TextUtils
 import android.util.Log
 import com.rhm.pwn.PWNApp
@@ -79,7 +79,7 @@ object URLCheckTask {
         PWNLog.log(URLCheckTask::class.java.name, "Checking if notifications are needed")
 
         Completable.fromAction {
-            val list = PWNDatabase.getInstance(appContext).urlCheckDao().all
+            val list = PWNDatabase.getInstance(appContext).urlCheckDao().all()
             val updated = list.filter { it.hasBeenUpdated && !it.updateShown }
             updated.forEach { urlCheck ->
                 PWNLog.log(URLCheckTask::class.java.name, "Found url updated at: " + urlCheck.displayTitle)

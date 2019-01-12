@@ -13,10 +13,12 @@ class HomeFeatureMVICoreActivity : ObservableSourceActivity<UiEvent>(), Consumer
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    val bindings = HomeFeatureActivityBindings(this, HomeFeature(PWNDatabase.getInstance(applicationContext).urlCheckDao().allObservable))
+    lateinit var bindings: HomeFeatureActivityBindings
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        bindings = HomeFeatureActivityBindings(this, HomeFeature(PWNDatabase.getInstance(applicationContext).urlCheckDao().allObservable()))
         setContentView(R.layout.fragment_pwnhome)
         setSupportActionBar(findViewById(R.id.toolbar))
         bindings.setup(this)

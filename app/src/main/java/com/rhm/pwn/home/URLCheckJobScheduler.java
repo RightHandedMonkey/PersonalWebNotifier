@@ -7,8 +7,8 @@ import android.app.job.JobService;
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.PersistableBundle;
-import android.support.annotation.MainThread;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.MainThread;
+import androidx.annotation.WorkerThread;
 import android.util.Log;
 
 import java.util.Calendar;
@@ -41,7 +41,7 @@ public class URLCheckJobScheduler extends JobService {
     public boolean onStartJob(JobParameters jobParameters) {
         started = true;
         PWNLog.log(URLCheckJobScheduler.class.getName(), "onStartJob() called - params: "+jobParameters.toString());
-        Single<List<URLCheck>> single = Single.fromCallable(() -> PWNDatabase.getInstance(this.getApplicationContext()).urlCheckDao().getAllEnabled()
+        Single<List<URLCheck>> single = Single.fromCallable(() -> PWNDatabase.getInstance(this.getApplicationContext()).urlCheckDao().allEnabled()
         )
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io());

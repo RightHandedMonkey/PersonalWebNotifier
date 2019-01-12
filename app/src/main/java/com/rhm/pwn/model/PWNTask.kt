@@ -1,7 +1,7 @@
 package com.rhm.pwn.model
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 /**
  * Created by sambo on 10/7/17.
