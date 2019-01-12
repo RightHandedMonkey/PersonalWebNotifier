@@ -1,18 +1,19 @@
-package com.rhm.pwn.home_feature
+package com.rhm.pwn.homeFeature
 
+import com.rhm.pwn.homeFeature.HomeFeature.State
+import com.rhm.pwn.homeFeature.HomeFeature.Wish
+import com.rhm.pwn.homeFeature.HomeFeature.Effect
 import com.badoo.mvicore.element.Actor
 import com.badoo.mvicore.element.Reducer
 import com.badoo.mvicore.feature.ActorReducerFeature
-import com.rhm.pwn.home_feature.HomeFeatureOld.Wish
-import com.rhm.pwn.home_feature.HomeFeatureOld.Effect
-import com.rhm.pwn.home_feature.HomeFeatureOld.State
 import com.rhm.pwn.model.URLCheck
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-class HomeFeatureOld : ActorReducerFeature<Wish, Effect, State, Nothing>(
+class HomeFeature(getListService: Observable<List<URLCheck>>) : ActorReducerFeature<Wish, Effect, State, Nothing>(
         initialState = State(),
-        actor = ActorImpl(),
+        actor = ActorImpl(getListService),
         reducer = ReducerImpl()
 ) {
 
@@ -20,17 +21,18 @@ class HomeFeatureOld : ActorReducerFeature<Wish, Effect, State, Nothing>(
             val isLoading: Boolean = false,
             val editShown: Boolean = false,
             val editUrlCheck: URLCheck? = null,
+            val debug: Boolean = false,
             val list: List<URLCheck> = emptyList())
 
 
     sealed class Wish {
         object HomeScreenLoading : Wish()
-        data class HomeScreenView(val urlCheck: URLCheck)
-        data class HomeScreenEditOpen(val urlCheck: URLCheck)
+        data class HomeScreenView(val urlCheckId: Int) : Wish()
+        data class HomeScreenEditOpen(val urlCheckId: Int) : Wish()
         object HomeScreenEditCancel : Wish()
-        data class HomeScreenEditSave(val urlCheck: URLCheck)
-        data class HomeScreenEditDelete(val urlCheck: URLCheck)
-        data class HomeScreenEditSelect(val urlCheck: URLCheck)
+        object HomeScreenDebug : Wish()
+        data class HomeScreenEditSave(val urlCheck: URLCheck) : Wish()
+        data class HomeScreenEditDelete(val urlCheckId: Int) : Wish()
     }
 
     sealed class Effect {
@@ -39,9 +41,7 @@ class HomeFeatureOld : ActorReducerFeature<Wish, Effect, State, Nothing>(
         data class FinishedWithFailure(val throwable: Throwable) : Effect()
     }
 
-    class ActorImpl : Actor<State, Wish, Effect> {
-        private val service: Observable<List<URLCheck>> = TODO()
-
+    class ActorImpl(val service: Observable<List<URLCheck>>) : Actor<State, Wish, Effect> {
         override fun invoke(state: State, wish: Wish): Observable<Effect> = when (wish) {
             is Wish.HomeScreenLoading -> {
                 if (!state.isLoading) {
@@ -72,5 +72,4 @@ class HomeFeatureOld : ActorReducerFeature<Wish, Effect, State, Nothing>(
             )
         }
     }
-
 }

@@ -64,6 +64,11 @@ dependencies {
     kapt "android.arch.persistence.room:compiler:1.1.1"
     //Room RxJava support
     implementation 'android.arch.persistence.room:rxjava2:1.1.1'
+    /*
+    dependencies {
+    implementation 'androidx.room:room-rxjava2:2.1.0-alpha02'
+}
+     */
     //Recycler view
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     //Card view
