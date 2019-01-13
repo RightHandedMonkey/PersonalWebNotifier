@@ -8,7 +8,6 @@ import com.badoo.mvicore.element.Reducer
 import com.badoo.mvicore.feature.ActorReducerFeature
 import com.rhm.pwn.model.URLCheck
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 
 class HomeFeature(getListService: Observable<List<URLCheck>>) : ActorReducerFeature<Wish, Effect, State, Nothing>(
@@ -27,12 +26,12 @@ class HomeFeature(getListService: Observable<List<URLCheck>>) : ActorReducerFeat
 
     sealed class Wish {
         object HomeScreenLoading : Wish()
-        data class HomeScreenView(val urlCheckId: Int) : Wish()
-        data class HomeScreenEditOpen(val urlCheckId: Int) : Wish()
+        data class HomeScreenView(val urlCheck: URLCheck) : Wish()
+        data class HomeScreenEditOpen(val urlCheck: URLCheck) : Wish()
         object HomeScreenEditCancel : Wish()
         object HomeScreenDebug : Wish()
         data class HomeScreenEditSave(val urlCheck: URLCheck) : Wish()
-        data class HomeScreenEditDelete(val urlCheckId: Int) : Wish()
+        data class HomeScreenEditDelete(val urlCheck: URLCheck) : Wish()
     }
 
     sealed class Effect {
