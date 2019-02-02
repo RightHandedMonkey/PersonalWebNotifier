@@ -34,7 +34,7 @@ public class WebViewActivity extends AppCompatActivity implements PWNInteraction
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("PWN");
-        Integer id = (Integer) getIntent().getSerializableExtra(URLCheck.class.getName());
+        Integer id = (Integer) getIntent().getSerializableExtra(URLCheck.CLASSNAME);
         if (id != null && id > 0) {
             Single.fromCallable(() -> PWNDatabase.getInstance(this).urlCheckDao().get(id))
                     .subscribeOn(Schedulers.io())

@@ -73,7 +73,7 @@ public class WebViewActivityFragment extends Fragment {
         WebView wv = view.findViewById(R.id.webView);
         progressBar = view.findViewById(R.id.progressBar);
         configureWebView(wv);
-        Integer id = (Integer) getActivity().getIntent().getSerializableExtra(URLCheck.class.getName());
+        Integer id = (Integer) getActivity().getIntent().getSerializableExtra(URLCheck.CLASSNAME);
         if (id != null && id > 0) {
 
             Single.fromCallable(() -> PWNDatabase.getInstance(this.getContext()).urlCheckDao().get(id))

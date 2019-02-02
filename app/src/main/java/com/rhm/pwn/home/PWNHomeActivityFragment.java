@@ -74,7 +74,7 @@ public class PWNHomeActivityFragment extends Fragment implements Observer {
             // Create an instance of the dialog fragment and show it
             DialogFragment dialog = new URLCheckDialog();
             Bundle b = new Bundle();
-            b.putSerializable(URLCheck.class.getName(), urlc);
+            b.putSerializable(URLCheck.CLASSNAME, urlc);
             dialog.setArguments(b);
             dialog.show(PWNHomeActivityFragment.this.getFragmentManager(), URLCheckDialog.class.getName());
             return true;

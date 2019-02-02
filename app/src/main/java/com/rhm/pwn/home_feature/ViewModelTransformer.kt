@@ -1,4 +1,4 @@
-package com.rhm.pwn.homeFeature
+package com.rhm.pwn.home_feature
 
 class ViewModelTransformer : (HomeFeature.State) -> ViewModel {
 
@@ -7,7 +7,6 @@ class ViewModelTransformer : (HomeFeature.State) -> ViewModel {
         return ViewModel(
                 featureState.list,
                 featureState.isLoading,
-                featureState.debug,
                 featureState.editUrlCheck
         )
     }

@@ -1,11 +1,11 @@
-package com.rhm.pwn.homeFeature
+package com.rhm.pwn.home_feature
 
 import com.badoo.mvicore.element.Actor
 import com.badoo.mvicore.element.Reducer
 import com.badoo.mvicore.feature.ActorReducerFeature
-import com.rhm.pwn.homeFeature.HomeFeatureOld.Wish
-import com.rhm.pwn.homeFeature.HomeFeatureOld.Effect
-import com.rhm.pwn.homeFeature.HomeFeatureOld.State
+import com.rhm.pwn.home_feature.HomeFeatureOld.Wish
+import com.rhm.pwn.home_feature.HomeFeatureOld.Effect
+import com.rhm.pwn.home_feature.HomeFeatureOld.State
 import com.rhm.pwn.model.URLCheck
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers

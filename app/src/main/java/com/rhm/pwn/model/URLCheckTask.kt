@@ -248,7 +248,7 @@ object URLCheckTask {
             mBuilder.setContentText(urlc.displayBody)
             // Creates an explicit intent for an Activity in your app
             val resultIntent = Intent(appContext, PWNHomeActivity::class.java)
-            resultIntent.putExtra(URLCheck::class.java.name, urlc.id)
+            resultIntent.putExtra(URLCheck.CLASSNAME, urlc.id)
             resultIntent.putExtra(URLCheck.URL, urlc.getUrl())
             val stackBuilder = TaskStackBuilder.create(appContext)
             // Adds the back stack for the Intent (but not the Intent itself)

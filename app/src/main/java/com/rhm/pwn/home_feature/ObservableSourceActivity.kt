@@ -1,4 +1,4 @@
-package com.rhm.pwn.homeFeature
+package com.rhm.pwn.home_feature
 
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.ObservableSource

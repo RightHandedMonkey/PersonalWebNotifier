@@ -1,8 +1,8 @@
-package com.rhm.pwn.homeFeature
+package com.rhm.pwn.home_feature
 
-import com.rhm.pwn.homeFeature.HomeFeature.State
-import com.rhm.pwn.homeFeature.HomeFeature.Wish
-import com.rhm.pwn.homeFeature.HomeFeature.Effect
+import com.rhm.pwn.home_feature.HomeFeature.State
+import com.rhm.pwn.home_feature.HomeFeature.Wish
+import com.rhm.pwn.home_feature.HomeFeature.Effect
 import com.badoo.mvicore.element.Actor
 import com.badoo.mvicore.element.Reducer
 import com.badoo.mvicore.feature.ActorReducerFeature
@@ -38,6 +38,7 @@ class HomeFeature(getListService: Observable<List<URLCheck>>) : ActorReducerFeat
         object StartedLoading : Effect()
         data class FinishedWithSuccess(val urlChecks: List<URLCheck>) : Effect()
         data class FinishedWithFailure(val throwable: Throwable) : Effect()
+        data class ShowEditDialog(val urlCheck: URLCheck) : Effect()
     }
 
     class ActorImpl(val service: Observable<List<URLCheck>>) : Actor<State, Wish, Effect> {
@@ -51,8 +52,14 @@ class HomeFeature(getListService: Observable<List<URLCheck>>) : ActorReducerFeat
                             .onErrorReturn { Effect.FinishedWithFailure(it) }
                 } else {
                     Observable.empty()
+
                 }
             }
+            is Wish.HomeScreenEditOpen -> {
+                service.observeOn(AndroidSchedulers.mainThread())
+                        .map { Effect.ShowEditDialog(wish.urlCheck)}
+            }
+            //TODO: Add remaining wishes
             else -> Observable.empty()
         }
     }
@@ -69,6 +76,7 @@ class HomeFeature(getListService: Observable<List<URLCheck>>) : ActorReducerFeat
             is Effect.FinishedWithFailure -> state.copy(
                     isLoading = false
             )
+            is Effect.ShowEditDialog -> state.copy(editUrlCheck = effect.urlCheck)
         }
     }
 }

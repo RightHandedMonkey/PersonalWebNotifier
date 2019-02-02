@@ -94,8 +94,11 @@ data class URLCheck(
         @Ignore @JvmStatic
         private val MAX_BODY_LEN = 768
 
-        @Ignore @JvmField
-        var URL = "url"
+        @Ignore
+        const val URL = "url"
+
+        @Ignore
+        const val CLASSNAME = "URLCheck"
 
         @Ignore
         const val CODE_NOT_RUN = -1

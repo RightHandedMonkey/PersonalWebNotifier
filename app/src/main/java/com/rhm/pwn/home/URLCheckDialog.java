@@ -39,6 +39,7 @@ public class URLCheckDialog extends DialogFragment {
     URLCheck urlc = new URLCheck();
 
 
+    @SuppressLint("CheckResult")
     @Override
     @NotNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -61,8 +62,8 @@ public class URLCheckDialog extends DialogFragment {
         CheckBox enableCheckbox = v.findViewById(R.id.notificationCheckBox);
         Button selectCSS = v.findViewById(R.id.selectCSSButton);
 
-        if (b != null && b.get(URLCheck.class.getName()) != null) {
-            urlc = (URLCheck) b.get(URLCheck.class.getName());
+        if (b != null && b.get(URLCheck.CLASSNAME) != null) {
+            urlc = (URLCheck) b.get(URLCheck.CLASSNAME);
             urlEdit.setText(urlc.getUrl());
             cssEdit.setText(urlc.getCssSelectorToInspect());
             enableCheckbox.setChecked(urlc.isEnableNotifications());
@@ -81,7 +82,7 @@ public class URLCheckDialog extends DialogFragment {
                             }
                             Log.d("SAMB", this.getClass().getName() + ", onSelectCSSCheck() called for id#" + id);
                             Intent i = new Intent(this.getContext(), WebViewActivity.class);
-                            i.putExtra(URLCheck.class.getName(), id);
+                            i.putExtra(URLCheck.CLASSNAME, id);
                             startActivityForResult(i, WebViewActivity.HIGHLIGHT_ROW_FROM_CSS_SELECTOR);
                             Log.d("SAMB", this.getClass().getName() + ", onSelectedURLCheck() finished");
                             dismiss();

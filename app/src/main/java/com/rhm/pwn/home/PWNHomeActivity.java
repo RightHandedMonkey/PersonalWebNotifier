@@ -51,7 +51,7 @@ public class PWNHomeActivity extends AppCompatActivity {
     private void checkForDeepLink() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            int value = extras.getInt(URLCheck.class.getName(), -1);
+            int value = extras.getInt(URLCheck.CLASSNAME, -1);
             String url = extras.getString(URLCheck.URL, "");
             if (value > 0 && !TextUtils.isEmpty(url)) {
                 CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
