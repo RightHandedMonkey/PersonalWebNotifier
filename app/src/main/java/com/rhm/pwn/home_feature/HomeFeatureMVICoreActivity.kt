@@ -8,8 +8,10 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.badoo.mvicore.android.AndroidBindings
 import com.badoo.mvicore.binder.using
 import com.rhm.pwn.BuildConfig
@@ -26,6 +28,7 @@ import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_pwnhome.*
 import kotlinx.android.synthetic.main.fragment_pwnhome.*
+import kotlin.concurrent.thread
 
 class HomeFeatureMVICoreActivity : ObservableSourceActivity<UiEvent>(), Consumer<ViewModel> {
 
@@ -34,8 +37,17 @@ class HomeFeatureMVICoreActivity : ObservableSourceActivity<UiEvent>(), Consumer
     override fun accept(vm: ViewModel?) {
         Log.d("SAMB", this.javaClass.name + ", accept() called")
         vm?.let {
-            (urlc_recycler_view.adapter as URLCheckAdapter).setValues(vm.urlChecks.toMutableList())
-            handleEditURLCheck(vm.openEditUrl)
+            if (vm.urlChecks.size > 0) {
+                (urlc_recycler_view.adapter as URLCheckAdapter).setValues(vm.urlChecks.toMutableList())
+                urlc_recycler_view.visibility = View.VISIBLE
+                empty_view.visibility = View.GONE
+            } else {
+                urlc_recycler_view.visibility = View.GONE
+                empty_view.visibility = View.VISIBLE
+            }
+            if (vm.openEditUrl != null) {
+                handleEditURLCheck(vm.openEditUrl)
+            }
         }
     }
 
@@ -60,21 +72,32 @@ class HomeFeatureMVICoreActivity : ObservableSourceActivity<UiEvent>(), Consumer
         return super.onOptionsItemSelected(item)
     }
 
+    private fun testItems() {
+        val size = PWNDatabase.getInstance(applicationContext).urlCheckDao().all().size
+        Log.d("SAMB", this.javaClass.name + ", testItems() called - total of $size item(s)")
+    }
+
     private lateinit var bindings: HomeFeatureActivityBindings
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bindings = HomeFeatureActivityBindings(this, HomeFeature(PWNDatabase.getInstance(applicationContext).urlCheckDao().allObservable()))
         setContentView(R.layout.activity_pwnhome)
         setSupportActionBar(findViewById(R.id.toolbar))
         bindViewActions()
+        bindings = HomeFeatureActivityBindings(this, HomeFeature(PWNDatabase.getInstance(applicationContext).urlCheckDao().allObservable().toObservable()))
         checkForDeepLink()
         bindings.setup(this)
+        thread {
+            testItems()
+        }
     }
 
     private fun bindViewActions() {
         val context = this
-        urlc_recycler_view.adapter = URLCheckAdapter(ArrayList(), object : URLCheckSelectedAction {
+        val list: MutableList<URLCheck> = ArrayList()
+        list.add(URLCheck())
+        urlc_recycler_view.layoutManager = LinearLayoutManager(this)
+        urlc_recycler_view.adapter = URLCheckAdapter(list, object : URLCheckSelectedAction {
             override fun onSelectedURLCheck(urlc: URLCheck) {
                 Toast.makeText(context, "Clicked on view item", Toast.LENGTH_SHORT).show()
                 onNext(UiEvent.ViewClicked(urlc))
@@ -86,6 +109,7 @@ class HomeFeatureMVICoreActivity : ObservableSourceActivity<UiEvent>(), Consumer
                 return true
             }
         })
+
         fab.setOnClickListener { onNext(UiEvent.EditClicked(URLCheck())) }
     }
 
@@ -105,20 +129,12 @@ class HomeFeatureMVICoreActivity : ObservableSourceActivity<UiEvent>(), Consumer
                     PWNDatabase.getInstance(this).urlCheckDao().update(urlc)
                 }.subscribeOn(Schedulers.io())
                         .subscribe { URLCheckChangeNotifier.getNotifier().update(true) }
-
             }
         }
     }
 
     fun handleEditURLCheck(urlc: URLCheck?) {
         // Create an instance of the dialog fragment and show it
-        if (urlc == null) {
-            if (dialog?.isAdded == true) {
-                dialog?.dismiss()
-                dialog = null
-            }
-            return
-        }
         if (dialog == null) {
             dialog = URLCheckDialog()
         }

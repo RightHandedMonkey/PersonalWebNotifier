@@ -263,7 +263,6 @@ object URLCheckTask {
             // number to NotificationManager.cancel().
             mNotificationManager.notify(urlc.id, mBuilder.build())
             index++
-            index++
         }
 
         Completable.fromAction {

@@ -14,9 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning"
-        android:usesCleartextTraffic="true"
-        >
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".home_feature.HomeFeatureMVICoreActivity"
             android:label="@string/title_activity_home_feature_mvicore"
@@ -31,7 +30,7 @@
             android:name=".home.PWNHomeActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name=".view_url.WebViewActivity"

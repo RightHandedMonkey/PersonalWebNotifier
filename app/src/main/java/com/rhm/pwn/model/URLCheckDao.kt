@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import io.reactivex.Observable
+import io.reactivex.Flowable
 
 /**
  * Created by sambo on 8/28/2017.
@@ -17,7 +17,7 @@ interface URLCheckDao {
     fun all(): List<URLCheck>
 
     @Query("SELECT * FROM urlcheck ORDER BY id ASC")
-    fun allObservable(): Observable<List<URLCheck>>
+    fun allObservable(): Flowable<List<URLCheck>>
 
     @Query("SELECT * FROM urlcheck WHERE enableNotifications > 0 and updateShown < 1 ORDER BY id ASC")
     fun allEnabledAndNotUpdateShown(): List<URLCheck>

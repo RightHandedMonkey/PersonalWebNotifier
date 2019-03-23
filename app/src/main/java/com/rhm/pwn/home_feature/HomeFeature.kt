@@ -1,9 +1,11 @@
 package com.rhm.pwn.home_feature
 
+import android.util.Log
 import com.rhm.pwn.home_feature.HomeFeature.State
 import com.rhm.pwn.home_feature.HomeFeature.Wish
 import com.rhm.pwn.home_feature.HomeFeature.Effect
 import com.badoo.mvicore.element.Actor
+import com.badoo.mvicore.element.Bootstrapper
 import com.badoo.mvicore.element.Reducer
 import com.badoo.mvicore.feature.ActorReducerFeature
 import com.rhm.pwn.model.URLCheck
@@ -13,7 +15,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 class HomeFeature(getListService: Observable<List<URLCheck>>) : ActorReducerFeature<Wish, Effect, State, Nothing>(
         initialState = State(),
         actor = ActorImpl(getListService),
-        reducer = ReducerImpl()
+        reducer = ReducerImpl(),
+        bootstrapper = BootstrapperImpl()
 ) {
 
     data class State(
@@ -22,7 +25,6 @@ class HomeFeature(getListService: Observable<List<URLCheck>>) : ActorReducerFeat
             val editUrlCheck: URLCheck? = null,
             val debug: Boolean = false,
             val list: List<URLCheck> = emptyList())
-
 
     sealed class Wish {
         object HomeScreenLoading : Wish()
@@ -42,41 +44,56 @@ class HomeFeature(getListService: Observable<List<URLCheck>>) : ActorReducerFeat
     }
 
     class ActorImpl(val service: Observable<List<URLCheck>>) : Actor<State, Wish, Effect> {
-        override fun invoke(state: State, wish: Wish): Observable<Effect> = when (wish) {
-            is Wish.HomeScreenLoading -> {
-                if (!state.isLoading) {
-                    service
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .map { Effect.FinishedWithSuccess(urlChecks = it) as Effect }
-                            .startWith(Effect.StartedLoading)
-                            .onErrorReturn { Effect.FinishedWithFailure(it) }
-                } else {
-                    Observable.empty()
+        override fun invoke(state: State, wish: Wish): Observable<Effect> {
+            Log.d("SAMB", this.javaClass.name + ", invoke() called $wish")
+            return when (wish) {
+                is Wish.HomeScreenLoading -> {
+                    if (!state.isLoading) {
+                        service
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .map { Effect.FinishedWithSuccess(urlChecks = it) as Effect }
+                                .startWith(Effect.StartedLoading)
+                                .onErrorReturn { Effect.FinishedWithFailure(it) }
+                    } else {
+                        Observable.empty()
 
+                    }
                 }
+                is Wish.HomeScreenEditOpen -> {
+                    service.observeOn(AndroidSchedulers.mainThread())
+                            .map { Effect.ShowEditDialog(wish.urlCheck) }
+                }
+                //TODO: Add remaining wishes
+                else -> Observable.empty()
             }
-            is Wish.HomeScreenEditOpen -> {
-                service.observeOn(AndroidSchedulers.mainThread())
-                        .map { Effect.ShowEditDialog(wish.urlCheck)}
-            }
-            //TODO: Add remaining wishes
-            else -> Observable.empty()
         }
     }
 
     class ReducerImpl : Reducer<State, Effect> {
-        override fun invoke(state: State, effect: Effect): State = when (effect) {
-            is Effect.StartedLoading -> state.copy(
-                    isLoading = true
-            )
-            is Effect.FinishedWithSuccess -> state.copy(
-                    isLoading = false,
-                    list = effect.urlChecks
-            )
-            is Effect.FinishedWithFailure -> state.copy(
-                    isLoading = false
-            )
-            is Effect.ShowEditDialog -> state.copy(editUrlCheck = effect.urlCheck)
+        override fun invoke(state: State, effect: Effect): State {
+            Log.d("SAMB", this.javaClass.name + ", invoke() called $effect")
+
+            return when (effect) {
+                is Effect.StartedLoading -> state.copy(
+                        isLoading = true
+                )
+                is Effect.FinishedWithSuccess -> {
+                    Log.d("SAMB", this.javaClass.name + ", items found: ${effect.urlChecks.size}")
+                    state.copy(
+                        isLoading = false,
+                        list = effect.urlChecks
+                )
+
+                }
+                is Effect.FinishedWithFailure -> state.copy(
+                        isLoading = false
+                )
+                is Effect.ShowEditDialog -> state.copy(editUrlCheck = effect.urlCheck)
+            }
         }
+    }
+
+    class BootstrapperImpl : Bootstrapper<Wish> {
+        override fun invoke(): Observable<Wish> = Observable.just(Wish.HomeScreenLoading as Wish).observeOn(AndroidSchedulers.mainThread())
     }
 }

@@ -52,13 +52,16 @@ public class PWNHomeActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             int value = extras.getInt(URLCheck.CLASSNAME, -1);
-            String url = extras.getString(URLCheck.URL, "");
-            if (value > 0 && !TextUtils.isEmpty(url)) {
+//            String url = extras.getString(URLCheck.URL, "");
+            if (value > 0) {
                 CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                 CustomTabsIntent customTabsIntent = builder.build();
-                customTabsIntent.launchUrl(this, Uri.parse(url));
                 Completable.fromAction(() -> {
                             URLCheck urlc = PWNDatabase.getInstance(this).urlCheckDao().get(value);
+                            String urlTarget = urlc.getUrl();
+                            if (!TextUtils.isEmpty(urlTarget)) {
+                                customTabsIntent.launchUrl(this, Uri.parse(urlTarget));
+                            }
                             urlc.setHasBeenUpdated(false);
                             PWNDatabase.getInstance(this).urlCheckDao().update(urlc);
                         }
