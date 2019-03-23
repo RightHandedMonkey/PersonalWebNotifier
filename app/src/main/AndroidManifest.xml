@@ -18,8 +18,10 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".home_feature.HomeFeatureMVICoreActivity"
-            android:label="@string/title_activity_home_feature_mvicore"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

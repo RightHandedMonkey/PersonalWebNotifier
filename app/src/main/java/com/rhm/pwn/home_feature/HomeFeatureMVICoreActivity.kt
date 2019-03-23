@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.badoo.mvicore.android.AndroidBindings
@@ -28,16 +27,15 @@ import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_pwnhome.*
 import kotlinx.android.synthetic.main.fragment_pwnhome.*
-import kotlin.concurrent.thread
 
 class HomeFeatureMVICoreActivity : ObservableSourceActivity<UiEvent>(), Consumer<ViewModel> {
 
-    var dialog: URLCheckDialog? = null
+    private var dialog: URLCheckDialog? = null
 
     override fun accept(vm: ViewModel?) {
         Log.d("SAMB", this.javaClass.name + ", accept() called")
         vm?.let {
-            if (vm.urlChecks.size > 0) {
+            if (vm.urlChecks.isNotEmpty()) {
                 (urlc_recycler_view.adapter as URLCheckAdapter).setValues(vm.urlChecks.toMutableList())
                 urlc_recycler_view.visibility = View.VISIBLE
                 empty_view.visibility = View.GONE
@@ -72,11 +70,6 @@ class HomeFeatureMVICoreActivity : ObservableSourceActivity<UiEvent>(), Consumer
         return super.onOptionsItemSelected(item)
     }
 
-    private fun testItems() {
-        val size = PWNDatabase.getInstance(applicationContext).urlCheckDao().all().size
-        Log.d("SAMB", this.javaClass.name + ", testItems() called - total of $size item(s)")
-    }
-
     private lateinit var bindings: HomeFeatureActivityBindings
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,24 +80,18 @@ class HomeFeatureMVICoreActivity : ObservableSourceActivity<UiEvent>(), Consumer
         bindings = HomeFeatureActivityBindings(this, HomeFeature(PWNDatabase.getInstance(applicationContext).urlCheckDao().allObservable().toObservable()))
         checkForDeepLink()
         bindings.setup(this)
-        thread {
-            testItems()
-        }
     }
 
     private fun bindViewActions() {
-        val context = this
         val list: MutableList<URLCheck> = ArrayList()
         list.add(URLCheck())
         urlc_recycler_view.layoutManager = LinearLayoutManager(this)
         urlc_recycler_view.adapter = URLCheckAdapter(list, object : URLCheckSelectedAction {
             override fun onSelectedURLCheck(urlc: URLCheck) {
-                Toast.makeText(context, "Clicked on view item", Toast.LENGTH_SHORT).show()
                 onNext(UiEvent.ViewClicked(urlc))
             }
 
             override fun onEditURLCheck(urlc: URLCheck): Boolean {
-                Toast.makeText(context, "Clicked on edit item", Toast.LENGTH_SHORT).show()
                 onNext(UiEvent.EditClicked(urlc))
                 return true
             }
@@ -133,7 +120,7 @@ class HomeFeatureMVICoreActivity : ObservableSourceActivity<UiEvent>(), Consumer
         }
     }
 
-    fun handleEditURLCheck(urlc: URLCheck?) {
+    private fun handleEditURLCheck(urlc: URLCheck?) {
         // Create an instance of the dialog fragment and show it
         if (dialog == null) {
             dialog = URLCheckDialog()
