@@ -24,6 +24,7 @@ import com.rhm.pwn.utils.PWNUtils;
 import io.reactivex.Completable;
 import io.reactivex.schedulers.Schedulers;
 
+@Deprecated
 public class PWNHomeActivity extends AppCompatActivity {
     private static boolean gettingStartedChecked = false;
 

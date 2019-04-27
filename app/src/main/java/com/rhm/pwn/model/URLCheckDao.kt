@@ -13,16 +13,16 @@ import io.reactivex.Flowable
  */
 @Dao
 interface URLCheckDao {
-    @Query("SELECT * FROM urlcheck ORDER BY id ASC")
+    @Query("SELECT * FROM urlcheck ORDER BY id DESC")
     fun all(): List<URLCheck>
 
-    @Query("SELECT * FROM urlcheck ORDER BY id ASC")
+    @Query("SELECT * FROM urlcheck ORDER BY id DESC")
     fun allObservable(): Flowable<List<URLCheck>>
 
-    @Query("SELECT * FROM urlcheck WHERE enableNotifications > 0 and updateShown < 1 ORDER BY id ASC")
+    @Query("SELECT * FROM urlcheck WHERE enableNotifications > 0 and updateShown < 1 ORDER BY id DESC")
     fun allEnabledAndNotUpdateShown(): List<URLCheck>
 
-    @Query("SELECT * FROM urlcheck WHERE enableNotifications > 0 ORDER BY id ASC")
+    @Query("SELECT * FROM urlcheck WHERE enableNotifications > 0 ORDER BY id DESC")
     fun allEnabled(): List<URLCheck>
 
     @Query("SELECT * FROM pwnlog ORDER BY id ASC LIMIT 500")

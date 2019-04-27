@@ -30,6 +30,8 @@ import com.rhm.pwn.view_url.WebViewActivity;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by sambo on 8/31/2017.
  */
@@ -70,7 +72,7 @@ public class URLCheckDialog extends DialogFragment {
             intervalSpinner.setSelection(URLCheckInterval.getIndexFromInterval(urlc.getCheckInterval()));
         }
 
-        RxView.clicks(selectCSS).subscribe(aVoid -> {
+        RxView.clicks(selectCSS).throttleFirst(500, TimeUnit.MILLISECONDS).subscribe(aVoid -> {
             Completable.fromAction(() -> onSaveClickedHelper(urlc, intervalSpinner, enableCheckbox, urlEdit, cssEdit)).observeOn(AndroidSchedulers.mainThread())
                     .observeOn(Schedulers.io())
                     .subscribeOn(AndroidSchedulers.mainThread())

@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
@@ -11,7 +12,7 @@ import android.text.TextUtils
 import android.util.Log
 import com.rhm.pwn.PWNApp
 import com.rhm.pwn.R
-import com.rhm.pwn.home.PWNHomeActivity
+import com.rhm.pwn.home_feature.HomeFeatureMVICoreActivity
 import com.rhm.pwn.network.PWNRetroFitConnector
 import com.rhm.pwn.utils.PWNUtils
 import io.reactivex.Completable
@@ -237,7 +238,9 @@ object URLCheckTask {
 
     private fun createNotifications(appContext: Context, updatedItems: List<URLCheck>) {
         var index = 0
+        Log.i("SAMB", "Creating notifications")
         while (index < updatedItems.size) {
+            Log.i("SAMB", "build notification $index")
             val urlc = updatedItems[index]
             val mBuilder = NotificationCompat.Builder(appContext, PWNApp.CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_stat_name)
@@ -246,13 +249,18 @@ object URLCheckTask {
                     .setAutoCancel(true)
             mBuilder.setStyle(NotificationCompat.BigTextStyle().bigText(buildLongNotificationMessage(urlc)))
             mBuilder.setContentText(urlc.displayBody)
-            // Creates an explicit intent for an Activity in your app
-            val resultIntent = Intent(appContext, PWNHomeActivity::class.java)
+            // Creates an explicit intent
+            val resultIntent = Intent(appContext, HomeFeatureMVICoreActivity::class.java)
             resultIntent.putExtra(URLCheck.CLASSNAME, urlc.id)
-            resultIntent.putExtra(URLCheck.URL, urlc.getUrl())
+            resultIntent.putExtra(URLCheck.URL, urlc.url)
+            //Keep intents separate (if action is not specified, only 1 intent will be used
+            resultIntent.action = urlc.getUrl()
+//            resultIntent.setPackage("com.rhm.pwn")
+//            Log.i("SAMB", "build notification $index - id ${urlc.id}")
+//            Log.i("SAMB", "build notification $index - url ${urlc.url}")
             val stackBuilder = TaskStackBuilder.create(appContext)
             // Adds the back stack for the Intent (but not the Intent itself)
-            stackBuilder.addParentStack(PWNHomeActivity::class.java)
+            stackBuilder.addParentStack(HomeFeatureMVICoreActivity::class.java)
             stackBuilder.addNextIntent(resultIntent)
             val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
             mBuilder.setContentIntent(resultPendingIntent)

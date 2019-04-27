@@ -7,7 +7,8 @@ class ViewModelTransformer : (HomeFeature.State) -> ViewModel {
         return ViewModel(
                 featureState.list,
                 featureState.isLoading,
-                featureState.editUrlCheck
+                featureState.editUrlCheck,
+                featureState.viewUrlCheck
         )
     }
 }

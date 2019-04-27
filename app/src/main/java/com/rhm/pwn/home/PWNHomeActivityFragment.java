@@ -53,9 +53,6 @@ public class PWNHomeActivityFragment extends Fragment implements Observer {
             if (isAdded()) {
                 Log.d("SAMB", this.getClass().getName() + ", onSelectedURLCheck() called");
                 CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                Intent selectAction = new Intent(PWNHomeActivityFragment.this.getActivity(), PWNHomeActivity.class);
-                PendingIntent pi = PendingIntent.getActivity(PWNHomeActivityFragment.this.getActivity(), 0, selectAction, 0);
-                Bitmap selectIcon = BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_input_get);
                 CustomTabsIntent customTabsIntent = builder.build();
                 customTabsIntent.launchUrl(PWNHomeActivityFragment.this.getActivity(), Uri.parse(urlc.getUrl()));
                 Completable.fromAction(() -> {
