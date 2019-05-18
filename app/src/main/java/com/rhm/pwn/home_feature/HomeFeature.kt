@@ -73,6 +73,10 @@ class HomeFeature(getListService: Observable<List<URLCheck>>) : ActorReducerFeat
                         Observable.empty()
                     }
                 }
+                is Wish.HomeScreenEditOpen -> {
+                    Observable.just(Effect.StatelessShowEditDialog(wish.urlCheck))
+                }
+
                 else -> Observable.empty()
             }
         }

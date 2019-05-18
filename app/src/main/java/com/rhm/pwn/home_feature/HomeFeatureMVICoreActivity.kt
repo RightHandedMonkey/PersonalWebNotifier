@@ -98,6 +98,7 @@ class HomeFeatureMVICoreActivity : ObservableSourceActivity<UiEvent>(), Consumer
             override fun onSelectedURLCheck(urlc: URLCheck) {
                 //does not use MVI yet, because we don't want to relaunch each time the feature updates
                 //TODO Rework as news producer or extra state to handle case where this was already called
+                //Problem is on a save of an existing item, it saves to the DB which triggers another event before the dialog is dismissed
                 handleViewURLCheck(urlc)
             }
 
@@ -108,7 +109,9 @@ class HomeFeatureMVICoreActivity : ObservableSourceActivity<UiEvent>(), Consumer
             }
         })
 
-        fab.setOnClickListener { onNext(UiEvent.EditClicked(URLCheck())) }
+        fab.setOnClickListener {
+            handleEditURLCheck(URLCheck())
+        }
     }
 
     @SuppressLint("CheckResult")
