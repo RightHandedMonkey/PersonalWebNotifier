@@ -23,7 +23,7 @@ public class BootCompleteReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("SAMB", "BootCompleteReceiver event received. Starting PWN job");
-        Single<List<URLCheck>> single = Single.fromCallable(() -> PWNDatabase.getInstance(context).urlCheckDao().getAllEnabled())
+        Single<List<URLCheck>> single = Single.fromCallable(() -> PWNDatabase.getInstance(context).urlCheckDao().allEnabled())
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io());
         single.subscribe((urlChecks, throwable) -> {

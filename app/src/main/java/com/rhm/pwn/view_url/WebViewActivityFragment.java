@@ -1,9 +1,9 @@
 package com.rhm.pwn.view_url;
 
 import android.content.Context;
-import android.support.annotation.MainThread;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.MainThread;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,7 +27,7 @@ import com.rhm.pwn.model.URLCheck;
 import com.rhm.pwn.model.URLCheckChangeNotifier;
 import com.rhm.pwn.utils.PWNUtils;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -73,14 +73,14 @@ public class WebViewActivityFragment extends Fragment {
         WebView wv = view.findViewById(R.id.webView);
         progressBar = view.findViewById(R.id.progressBar);
         configureWebView(wv);
-        Integer id = (Integer) getActivity().getIntent().getSerializableExtra(URLCheck.class.getName());
+        Integer id = (Integer) getActivity().getIntent().getSerializableExtra(URLCheck.CLASSNAME);
         if (id != null && id > 0) {
 
             Single.fromCallable(() -> PWNDatabase.getInstance(this.getContext()).urlCheckDao().get(id))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe((urlCheck, throwable) -> {
-                        Log.d("SAMB", "Loading url '" + urlCheck.getUrl().toString() + "' into webview in fragment");
+                        Log.d("SAMB", "Loading url '" + urlCheck.getUrl() + "' into webview in fragment");
 
                         if (isAdded()) {
                             //since we are viewing it now, reset the setting
@@ -115,7 +115,7 @@ public class WebViewActivityFragment extends Fragment {
                     @Override
                     public void onPageFinished(WebView view, String url) {
                         super.onPageFinished(view, url);
-                        Log.d("SAMB", "onPageFinished() called for '" + url.toString() + "'");
+                        Log.d("SAMB", "onPageFinished() called for '" + url + "'");
                         if (isAdded()) {
                             String js = "javascript:" + PWNUtils.readResourceAsString(getActivity(), R.raw.selector_min);
                             Assert.assertTrue(!TextUtils.isEmpty(js));
@@ -130,7 +130,7 @@ public class WebViewActivityFragment extends Fragment {
 
                     @Override
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                        Log.d("SAMB", this.getClass().getName() + " - shouldOverrideUrlLoading() where url: "+url.toString());
+                        Log.d("SAMB", this.getClass().getName() + " - shouldOverrideUrlLoading() where url: "+ url);
                         if (isAdded()) {
                             updateLoadingIndicator(true);
                         }

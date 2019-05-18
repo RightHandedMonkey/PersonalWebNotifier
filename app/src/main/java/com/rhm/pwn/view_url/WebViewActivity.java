@@ -1,8 +1,8 @@
 package com.rhm.pwn.view_url;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,7 +34,7 @@ public class WebViewActivity extends AppCompatActivity implements PWNInteraction
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("PWN");
-        Integer id = (Integer) getIntent().getSerializableExtra(URLCheck.class.getName());
+        Integer id = (Integer) getIntent().getSerializableExtra(URLCheck.CLASSNAME);
         if (id != null && id > 0) {
             Single.fromCallable(() -> PWNDatabase.getInstance(this).urlCheckDao().get(id))
                     .subscribeOn(Schedulers.io())

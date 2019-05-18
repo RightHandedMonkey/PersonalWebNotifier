@@ -1,34 +1,38 @@
 package com.rhm.pwn.model
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Delete
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
-import android.arch.persistence.room.Update
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
+import io.reactivex.Flowable
 
 /**
  * Created by sambo on 8/28/2017.
  */
 @Dao
 interface URLCheckDao {
-    @get:Query("SELECT * FROM urlcheck ORDER BY id ASC")
-    val all: List<URLCheck>
+    @Query("SELECT * FROM urlcheck ORDER BY id DESC")
+    fun all(): List<URLCheck>
 
-    @get:Query("SELECT * FROM urlcheck WHERE enableNotifications > 0 and updateShown < 1 ORDER BY id ASC")
-    val allEnabledAndNotUpdateShown: List<URLCheck>
+    @Query("SELECT * FROM urlcheck ORDER BY id DESC")
+    fun allObservable(): Flowable<List<URLCheck>>
 
-    @get:Query("SELECT * FROM urlcheck WHERE enableNotifications > 0 ORDER BY id ASC")
-    val allEnabled: List<URLCheck>
+    @Query("SELECT * FROM urlcheck WHERE enableNotifications > 0 and updateShown < 1 ORDER BY id DESC")
+    fun allEnabledAndNotUpdateShown(): List<URLCheck>
 
-    @get:Query("SELECT * FROM pwnlog ORDER BY id ASC LIMIT 500")
-    val logs: List<PWNLog>
+    @Query("SELECT * FROM urlcheck WHERE enableNotifications > 0 ORDER BY id DESC")
+    fun allEnabled(): List<URLCheck>
 
-    @get:Query("SELECT * FROM pwnlog ORDER BY id DESC LIMIT 500")
-    val logsDescending: List<PWNLog>
+    @Query("SELECT * FROM pwnlog ORDER BY id ASC LIMIT 500")
+    fun logs(): List<PWNLog>
 
-    @get:Query("SELECT * FROM pwntask ORDER BY id DESC")
-    val tasks: List<PWNTask>
+    @Query("SELECT * FROM pwnlog ORDER BY id DESC LIMIT 500")
+    fun logsDescending(): List<PWNLog>
+
+    @Query("SELECT * FROM pwntask ORDER BY id DESC")
+    fun tasks(): List<PWNTask>
 
     @Query("SELECT * FROM urlcheck WHERE id = :id")
     operator fun get(id: Int): URLCheck

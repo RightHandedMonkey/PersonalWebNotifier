@@ -4,9 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
+import com.google.android.material.textfield.TextInputEditText;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +30,8 @@ import com.rhm.pwn.view_url.WebViewActivity;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by sambo on 8/31/2017.
  */
@@ -39,6 +41,7 @@ public class URLCheckDialog extends DialogFragment {
     URLCheck urlc = new URLCheck();
 
 
+    @SuppressLint("CheckResult")
     @Override
     @NotNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -61,15 +64,15 @@ public class URLCheckDialog extends DialogFragment {
         CheckBox enableCheckbox = v.findViewById(R.id.notificationCheckBox);
         Button selectCSS = v.findViewById(R.id.selectCSSButton);
 
-        if (b != null && b.get(URLCheck.class.getName()) != null) {
-            urlc = (URLCheck) b.get(URLCheck.class.getName());
+        if (b != null && b.get(URLCheck.CLASSNAME) != null) {
+            urlc = (URLCheck) b.get(URLCheck.CLASSNAME);
             urlEdit.setText(urlc.getUrl());
             cssEdit.setText(urlc.getCssSelectorToInspect());
             enableCheckbox.setChecked(urlc.isEnableNotifications());
             intervalSpinner.setSelection(URLCheckInterval.getIndexFromInterval(urlc.getCheckInterval()));
         }
 
-        RxView.clicks(selectCSS).subscribe(aVoid -> {
+        RxView.clicks(selectCSS).throttleFirst(500, TimeUnit.MILLISECONDS).subscribe(aVoid -> {
             Completable.fromAction(() -> onSaveClickedHelper(urlc, intervalSpinner, enableCheckbox, urlEdit, cssEdit)).observeOn(AndroidSchedulers.mainThread())
                     .observeOn(Schedulers.io())
                     .subscribeOn(AndroidSchedulers.mainThread())
@@ -81,7 +84,7 @@ public class URLCheckDialog extends DialogFragment {
                             }
                             Log.d("SAMB", this.getClass().getName() + ", onSelectCSSCheck() called for id#" + id);
                             Intent i = new Intent(this.getContext(), WebViewActivity.class);
-                            i.putExtra(URLCheck.class.getName(), id);
+                            i.putExtra(URLCheck.CLASSNAME, id);
                             startActivityForResult(i, WebViewActivity.HIGHLIGHT_ROW_FROM_CSS_SELECTOR);
                             Log.d("SAMB", this.getClass().getName() + ", onSelectedURLCheck() finished");
                             dismiss();

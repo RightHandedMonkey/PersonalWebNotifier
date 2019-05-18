@@ -6,7 +6,6 @@
     <string name="loading">Loading...</string>
     <string name="title_activity_debug">Debug Activity</string>
     <string name="no_data_available">There are no websites being tracked yet. \nFollow one by clicking the Add button</string>
-    <string name="ftde_get_started_button">Let\'s Go...</string>
     <!--<string name="get_started_message">This app is intended to be used to track websites and notify you when something changes. Enter the URL you are interested in, then click \'Select item on page\'. When the website loads, you will be able to click on a section of the page you wish to be notified of. The part of the page you selected is converted to a CSS selector. The app uses that to check for changes on the given schedule.</string>-->
     <string-array name="get_started_header_array">
         <item>What is this app for?</item>
@@ -17,4 +16,5 @@
     <integer-array name="get_started_image_array">
         <item>@drawable/target_active</item>
     </integer-array>
+    <string name="title_activity_home_feature_mvicore">HomeFeatureMVICoreActivity</string>
 </resources>

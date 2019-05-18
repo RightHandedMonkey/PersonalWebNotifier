@@ -3,11 +3,11 @@ package com.rhm.pwn.home;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.browser.customtabs.CustomTabsIntent;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +24,7 @@ import com.rhm.pwn.utils.PWNUtils;
 import io.reactivex.Completable;
 import io.reactivex.schedulers.Schedulers;
 
+@Deprecated
 public class PWNHomeActivity extends AppCompatActivity {
     private static boolean gettingStartedChecked = false;
 
@@ -51,14 +52,17 @@ public class PWNHomeActivity extends AppCompatActivity {
     private void checkForDeepLink() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            int value = extras.getInt(URLCheck.class.getName(), -1);
-            String url = extras.getString(URLCheck.URL, "");
-            if (value > 0 && !TextUtils.isEmpty(url)) {
+            int value = extras.getInt(URLCheck.CLASSNAME, -1);
+//            String url = extras.getString(URLCheck.URL, "");
+            if (value > 0) {
                 CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                 CustomTabsIntent customTabsIntent = builder.build();
-                customTabsIntent.launchUrl(this, Uri.parse(url));
                 Completable.fromAction(() -> {
                             URLCheck urlc = PWNDatabase.getInstance(this).urlCheckDao().get(value);
+                            String urlTarget = urlc.getUrl();
+                            if (!TextUtils.isEmpty(urlTarget)) {
+                                customTabsIntent.launchUrl(this, Uri.parse(urlTarget));
+                            }
                             urlc.setHasBeenUpdated(false);
                             PWNDatabase.getInstance(this).urlCheckDao().update(urlc);
                         }

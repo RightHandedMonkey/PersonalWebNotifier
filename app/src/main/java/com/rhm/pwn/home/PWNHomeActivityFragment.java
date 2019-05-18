@@ -5,14 +5,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,14 +53,6 @@ public class PWNHomeActivityFragment extends Fragment implements Observer {
             if (isAdded()) {
                 Log.d("SAMB", this.getClass().getName() + ", onSelectedURLCheck() called");
                 CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                Intent selectAction = new Intent(PWNHomeActivityFragment.this.getActivity(), PWNHomeActivity.class);
-                //TODO: Handle case for using customTab to choose URLs
-                //selectAction.putExtra(URLCheck.class.getName(), urlc.getId());
-                //selectAction.putExtra(ACTION, ACTION_EDIT);
-                //retrieve URL using intent.getDataString() to see which URL was in the browser when selected
-                PendingIntent pi = PendingIntent.getActivity(PWNHomeActivityFragment.this.getActivity(), 0, selectAction, 0);
-                Bitmap selectIcon = BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_input_get);
-                //builder.setActionButton(selectIcon,"Select Page", pi, true);
                 CustomTabsIntent customTabsIntent = builder.build();
                 customTabsIntent.launchUrl(PWNHomeActivityFragment.this.getActivity(), Uri.parse(urlc.getUrl()));
                 Completable.fromAction(() -> {
@@ -79,7 +71,7 @@ public class PWNHomeActivityFragment extends Fragment implements Observer {
             // Create an instance of the dialog fragment and show it
             DialogFragment dialog = new URLCheckDialog();
             Bundle b = new Bundle();
-            b.putSerializable(URLCheck.class.getName(), urlc);
+            b.putSerializable(URLCheck.CLASSNAME, urlc);
             dialog.setArguments(b);
             dialog.show(PWNHomeActivityFragment.this.getFragmentManager(), URLCheckDialog.class.getName());
             return true;
@@ -139,7 +131,7 @@ public class PWNHomeActivityFragment extends Fragment implements Observer {
 
     private void updateFromDb() {
         Completable.fromAction(
-                () -> list = PWNDatabase.getInstance(PWNHomeActivityFragment.this.getContext()).urlCheckDao().getAll()
+                () -> list = PWNDatabase.getInstance(PWNHomeActivityFragment.this.getContext()).urlCheckDao().all()
         ).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(() -> {
