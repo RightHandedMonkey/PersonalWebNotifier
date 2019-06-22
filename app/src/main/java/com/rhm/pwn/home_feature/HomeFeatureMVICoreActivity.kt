@@ -1,6 +1,8 @@
 package com.rhm.pwn.home_feature
 
 import android.annotation.SuppressLint
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -90,20 +92,17 @@ class HomeFeatureMVICoreActivity : ObservableSourceActivity<UiEvent>(), Consumer
     }
 
     private fun bindViewActions() {
-        //TODO Add news consumer to handle showing the edit dialogs
         val list: MutableList<URLCheck> = ArrayList()
         list.add(URLCheck())
         urlc_recycler_view.layoutManager = LinearLayoutManager(this)
         urlc_recycler_view.adapter = URLCheckAdapter(list, object : URLCheckSelectedAction {
             override fun onSelectedURLCheck(urlc: URLCheck) {
-                //does not use MVI yet, because we don't want to relaunch each time the feature updates
-                //TODO Rework as news producer or extra state to handle case where this was already called
+                //does not use MVI, because we don't want to relaunch each time the feature updates
                 //Problem is on a save of an existing item, it saves to the DB which triggers another event before the dialog is dismissed
                 handleViewURLCheck(urlc)
             }
 
             override fun onEditURLCheck(urlc: URLCheck): Boolean {
-                //TODO Rework as news producer or extra state to handle case where this was already called
                 handleEditURLCheck(urlc)
                 return true
             }
@@ -169,6 +168,7 @@ class HomeFeatureMVICoreActivity : ObservableSourceActivity<UiEvent>(), Consumer
         val customTabsIntent = builder.build()
         customTabsIntent.launchUrl(this, Uri.parse(urlc.getUrl()))
         URLCheckChangeNotifier.getNotifier().update(true)
+        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(urlc.id)
 
         GlobalScope.launch {
             urlc.hasBeenUpdated = false

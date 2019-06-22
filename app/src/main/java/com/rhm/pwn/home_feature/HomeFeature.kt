@@ -21,7 +21,7 @@ class HomeFeature(getListService: Observable<List<URLCheck>>) : ActorReducerFeat
         bootstrapper = BootstrapperImpl(),
         newsPublisher = NewsPublisherImpl()
 ) {
-
+    //TODO : Use new app icons and branding
     data class State(
             val isLoading: Boolean = false,
             val editShown: Boolean = false,
