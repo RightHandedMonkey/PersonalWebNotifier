@@ -244,6 +244,7 @@ object URLCheckTask {
             val urlc = updatedItems[index]
             val mBuilder = NotificationCompat.Builder(appContext, PWNApp.CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_stat_name)
+                    .setColor(appContext.resources.getColor(R.color.colorPrimary, appContext.theme))
                     .setContentTitle(urlc.title)
                     .setContentText(urlc.displayBody)
                     .setAutoCancel(true)

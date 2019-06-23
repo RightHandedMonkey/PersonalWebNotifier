@@ -33,6 +33,12 @@ import kotlinx.coroutines.launch
 
 class HomeFeatureMVICoreActivity : ObservableSourceActivity<UiEvent>(), Consumer<ViewModel> {
 
+    //General ToDos
+    //TODO: Android lifecycle comoonents
+    //TODO: Storage of data remotely synced to the user's Google account
+    //TODO: Material Components
+    //TODO: UI Components
+
     private var dialog: URLCheckDialog? = null
 
     override fun accept(vm: ViewModel?) {
