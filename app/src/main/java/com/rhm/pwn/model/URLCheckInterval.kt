@@ -9,7 +9,8 @@ enum class URLCheckInterval(val interval: Long, private val description: String)
     INT_15_MIN(15 * 60, "15 Minutes"),
     INT_1_HOUR(60 * 60, "1 Hour"),
     INT_6_HOURS(6 * 60 * 60, "6 Hours"),
-    INT_1_DAY(24 * 60 * 60, "1 Day");
+    INT_1_DAY(24 * 60 * 60, "1 Day"),
+    INT_1_WEEK(7 * 24 * 60 * 60, "1 Week");
 
     companion object {
 
