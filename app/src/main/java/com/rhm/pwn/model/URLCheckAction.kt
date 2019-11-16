@@ -3,6 +3,7 @@ package com.rhm.pwn.model
 import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -23,6 +24,7 @@ class URLCheckAction(private val appContext: Context, private val notificationSe
         Log.d("SAMB", this.javaClass.name + ", handleViewURLCheck() called for $urlc")
         val builder = CustomTabsIntent.Builder()
         val customTabsIntent = builder.build()
+        customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         customTabsIntent.launchUrl(appContext, Uri.parse(urlc.getUrl()))
         URLCheckChangeNotifier.getNotifier().update(true)
         notificationService.cancel(urlc.id)

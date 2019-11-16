@@ -84,6 +84,7 @@ public class URLCheckDialog extends DialogFragment {
                             }
                             Log.d("SAMB", this.getClass().getName() + ", onSelectCSSCheck() called for id#" + id);
                             Intent i = new Intent(this.getContext(), WebViewActivity.class);
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             i.putExtra(URLCheck.CLASSNAME, id);
                             startActivityForResult(i, WebViewActivity.HIGHLIGHT_ROW_FROM_CSS_SELECTOR);
                             Log.d("SAMB", this.getClass().getName() + ", onSelectedURLCheck() finished");

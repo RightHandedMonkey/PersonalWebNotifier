@@ -54,6 +54,7 @@ public class PWNHomeActivityFragment extends Fragment implements Observer {
                 Log.d("SAMB", this.getClass().getName() + ", onSelectedURLCheck() called");
                 CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                 CustomTabsIntent customTabsIntent = builder.build();
+                customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 customTabsIntent.launchUrl(PWNHomeActivityFragment.this.getActivity(), Uri.parse(urlc.getUrl()));
                 Completable.fromAction(() -> {
                             urlc.setHasBeenUpdated(false);

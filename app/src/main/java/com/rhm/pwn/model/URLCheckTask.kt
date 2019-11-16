@@ -252,6 +252,7 @@ object URLCheckTask {
             mBuilder.setContentText(urlc.displayBody)
             // Creates an explicit intent
             val resultIntent = Intent(appContext, HomeFeatureMVICoreActivity::class.java)
+            resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             resultIntent.putExtra(URLCheck.CLASSNAME, urlc.id)
             resultIntent.putExtra(URLCheck.URL, urlc.url)
             //Keep intents separate (if action is not specified, only 1 intent will be used
