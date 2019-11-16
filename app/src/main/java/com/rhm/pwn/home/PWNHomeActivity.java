@@ -1,5 +1,6 @@
 package com.rhm.pwn.home;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,6 +50,7 @@ public class PWNHomeActivity extends AppCompatActivity {
         checkForDeepLink();
     }
 
+    @SuppressLint("CheckResult")
     private void checkForDeepLink() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {

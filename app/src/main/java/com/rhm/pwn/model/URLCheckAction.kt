@@ -14,7 +14,7 @@ import com.rhm.pwn.home.URLCheckDialog
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class URLCheckAction(private val appContext: Context, private val notificationService: NotificationManager, private val supportFragManager: FragmentManager) {
+class URLCheckAction(private val activityContext: Context, private val notificationService: NotificationManager, private val supportFragManager: FragmentManager) {
 
     private var dialog: URLCheckDialog? = null
 
@@ -24,14 +24,13 @@ class URLCheckAction(private val appContext: Context, private val notificationSe
         Log.d("SAMB", this.javaClass.name + ", handleViewURLCheck() called for $urlc")
         val builder = CustomTabsIntent.Builder()
         val customTabsIntent = builder.build()
-        customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        customTabsIntent.launchUrl(appContext, Uri.parse(urlc.getUrl()))
+        customTabsIntent.launchUrl(activityContext, Uri.parse(urlc.getUrl()))
         URLCheckChangeNotifier.getNotifier().update(true)
         notificationService.cancel(urlc.id)
 
         GlobalScope.launch {
             urlc.hasBeenUpdated = false
-            PWNDatabase.getInstance(appContext).urlCheckDao().update(urlc)
+            PWNDatabase.getInstance(activityContext).urlCheckDao().update(urlc)
         }
     }
 

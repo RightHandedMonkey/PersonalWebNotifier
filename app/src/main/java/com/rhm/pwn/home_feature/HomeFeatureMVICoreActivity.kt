@@ -88,7 +88,7 @@ class HomeFeatureMVICoreActivity : ObservableSourceActivity<UiEvent>(), Consumer
         bindViewActions()
         bindings = HomeFeatureActivityBindings(this, HomeFeature(PWNDatabase.getInstance(applicationContext).urlCheckDao().allObservable().toObservable()))
         bindings.setup(this)
-        urlCheckAction = URLCheckAction(applicationContext, (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager), supportFragmentManager)
+        urlCheckAction = URLCheckAction(this, (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager), supportFragmentManager)
         checkForDeepLink()
     }
 
